@@ -1,11 +1,43 @@
 package com.wordris.wordrisproject;
 
+import javafx.scene.shape.Rectangle;
+
+enum formation {
+    L,
+    J,
+    O,
+    I,
+    T,
+    Z,
+    S;
+}
+
 public class Polyomino {
+    // letters stores the specific letters on the polyomino
+    // shapes store the specific formation of the polyomino
     private char[] letters;
-    private Shape shape;
+    private Rectangle[] shapes;
+    private formation form;
 
-    // TODO: find a way to implement the shape types of the polyominos, either with an inner class or maybe a enum class
-    public class Shape {
+    // TODO: implement setup for coordinates of polyomino, as well as characters on rectangles
+    public Polyomino(String characters, Rectangle a, Rectangle b, Rectangle c, Rectangle d) {
+        // Polyominoes only have four blocks
+        for(int i = 0; i < 4; i++) {
+            letters[i] = characters.charAt(i);
+        }
 
+        shapes[0] = a;
+        shapes[1] = b;
+        shapes[2] = c;
+        shapes[3] = d;
+
+        // Each formation means setting x and y coordination will be different: b, c, and d are placed with reference to 'a' as the base
+        switch(form) {
+
+        }
+    }
+
+    public void setForm(formation form) {
+        this.form = form;
     }
 }

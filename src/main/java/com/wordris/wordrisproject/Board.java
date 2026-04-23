@@ -1,9 +1,23 @@
 package com.wordris.wordrisproject;
 
+import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
+
 import java.util.Queue;
 
 public class Board {
-    private char[][] board;
+    // Global variables: BASE_GRID represents the size of a 1x1 space in a grid
+    static final int BASE_GRID = 25;
+    static final int X_MAX = BASE_GRID * 12;
+    static final int Y_MAX = BASE_GRID * 24;
+
+    // letterBoard holds the data for what char is in which coordinate of the grid for the board
+    // visualBoard is the visual of the board as a pane
+    private final char[][] letterBoard = new char[X_MAX / BASE_GRID][Y_MAX / BASE_GRID];
+    private final Pane visualBoard = new Pane();
+    private final Scene scene = new Scene(visualBoard, X_MAX, Y_MAX);
+
+    // These items are separate from the board, but interact with the board in some way
     private Polyomino current;
     private Polyomino reserved;
     private Queue<Polyomino> polyominoQueue;

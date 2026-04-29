@@ -8,7 +8,7 @@ import static com.wordris.wordrisproject.Board.BASE_GRID;
 import static com.wordris.wordrisproject.Board.X_MAX;
 
 enum PolyominoState {
-    PREFIX, SUFFIX;
+    PRE_SUFFIX, BASE;
 }
 
 enum formation {
@@ -22,7 +22,7 @@ enum formation {
 }
 
 public class PolyominoGenerator {
-    private PolyominoState state = PolyominoState.PREFIX;
+    private PolyominoState state = PolyominoState.PRE_SUFFIX;
     private formation form = formation.L;
 
     // TODO: implement a way to store all four letter string of prefixes and suffixes
@@ -38,7 +38,6 @@ public class PolyominoGenerator {
         this.form = form;
     }
 
-
     // TODO: implement the word bank, a way to get from either prefix or suffix String bank, and a random number generator to get a random String
     private String getStringBank() {
         String randomFour = prefixBank[0];
@@ -47,27 +46,27 @@ public class PolyominoGenerator {
 
     private Polyomino makePoly() {
         int blockSize = BASE_GRID;
+        String chosenString = getStringBank();
+        Rectangle[] polyParts = new Rectangle[chosenString.length()];
 
-        Rectangle a = new Rectangle(blockSize, blockSize);
-        Rectangle b = new Rectangle(blockSize, blockSize);
-        Rectangle c = new Rectangle(blockSize, blockSize);
-        Rectangle d = new Rectangle(blockSize, blockSize);
+        for(int i = 0; i < chosenString.length(); i++) {
+            polyParts[i] = new Rectangle(blockSize, blockSize);
+        }
 
         // Each formation means setting x and y coordination will be different: b, c, and d are placed with reference to 'a' as the base
         switch(form) {
             case L:
-                a.setX(X_MAX / 2 - BASE_GRID);
-                b.setX(X_MAX / 2 - BASE_GRID);
-                b.setY(BASE_GRID);
-                c.setX(X_MAX / 2 - BASE_GRID);
-                c.setY(BASE_GRID * 2);
-                d.setX(X_MAX / 2 - (2 * BASE_GRID));
-                d.setY(BASE_GRID * 2);
+                polyParts[0].setX(X_MAX / 2 + BASE_GRID);
+                polyParts[1].setX(X_MAX / 2 - BASE_GRID);
+                polyParts[1].setY(BASE_GRID);
+                polyParts[2].setX(X_MAX / 2);
+                polyParts[2].setY(BASE_GRID);
+                polyParts[3].setX(X_MAX / 2 + BASE_GRID);
+                polyParts[3].setY(BASE_GRID);
             case J:
 
         }
 
-        Polyomino newPoly = new Polyomino(getStringBank(), a, b, c, d);
-        return newPoly;
+        return new Polyomino(chosenString, polyParts, chosenString.length());
     }
 }

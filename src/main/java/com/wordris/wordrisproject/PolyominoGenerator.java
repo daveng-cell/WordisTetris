@@ -2,13 +2,18 @@ package com.wordris.wordrisproject;
 
 import javafx.scene.shape.Rectangle;
 
-import java.util.Queue;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.PriorityQueue;
+import java.util.Random;
 
 import static com.wordris.wordrisproject.Board.BASE_GRID;
 import static com.wordris.wordrisproject.Board.X_MAX;
 
 enum PolyominoState {
-    PRE_SUFFIX, BASE;
+    PRE_SUFFIX, BASE
 }
 
 // Unsure of whether to do different shapes yet, will do straight lines first
@@ -25,34 +30,72 @@ enum PolyominoState {
 public class PolyominoGenerator {
     private PolyominoState state = PolyominoState.PRE_SUFFIX;
 
-    // TODO: implement a way to store all four letter string of prefixes and suffixes
-    private final String[] prefixAndSuffixBank = new String[0];
-    private final String[] baseBank = new String[0];
+    // TODO: create our bank of base words
+    private final ArrayList<String> prefixAndSuffixBank = new ArrayList<>();
+    private final ArrayList<String> baseBank = new ArrayList<>();
 
-    // TODO: implement the generator
-    public Queue<Polyomino> generatePolyominos() {
-        return null;
+    // May need improvements
+    public PriorityQueue<Polyomino> generatePolyominos(int numOfPolyominoes) {
+        PriorityQueue<Polyomino> currQueue = new PriorityQueue<>();
+
+        for(int i = 0; i < numOfPolyominoes; i++) {
+            currQueue.add(makePoly());
+            if(state == PolyominoState.PRE_SUFFIX) {
+                setState(PolyominoState.BASE);
+            }
+            else {
+                setState(PolyominoState.PRE_SUFFIX);
+            }
+        }
+        return currQueue;
     }
 
-//    public void setForm(formation form) {
-//        this.form = form;
-//    }
+    private void setState(PolyominoState state) {
+        this.state = state;
+    }
 
     // Requires JSON file or whatever kind of file with all prefixes, suffixes and bases to implement
     // Takes that file and implants them into the Strin banks
     private void createStringBank() {
+        try {
+            BufferedReader pre_suffix_br = new BufferedReader(new FileReader("Prefix-Suffix_Bank"));
+            BufferedReader base_br = new BufferedReader(new FileReader("Base_Bank"));
+            String line;
 
+            while((line = pre_suffix_br.readLine()) != null) {
+                prefixAndSuffixBank.add(line);
+            }
+
+            while((line = base_br.readLine()) != null) {
+                baseBank.add(line);
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
-    // TODO: implement the word bank, a way to get from either prefix or suffix String bank, and a random number generator to get a random String
-    private String getStringBank() {
-        String random = prefixAndSuffixBank[0];
-        return random;
+    private String getRandomString() {
+        Random r = new Random();
+        int bound;
+        ArrayList<String> currBank = switch (state) {
+            case PRE_SUFFIX -> {
+                bound = prefixAndSuffixBank.size();
+                yield prefixAndSuffixBank;
+            }
+            case BASE -> {
+                bound = baseBank.size();
+                yield baseBank;
+            }
+            default -> throw new IllegalStateException("Unexpected value: " + state);
+        };
+
+        return currBank.get(r.nextInt(bound));
     }
 
     private Polyomino makePoly() {
         int blockSize = BASE_GRID;
-        String chosenString = getStringBank();
+        String chosenString = getRandomString();
         Rectangle[] polyParts = new Rectangle[chosenString.length()];
 
         for(int i = 0; i < chosenString.length(); i++) {
@@ -67,7 +110,7 @@ public class PolyominoGenerator {
     private void positionBlocks(Rectangle[] blocks) {
         // In an array of Rectangles, parts of a polyomino is placed as a straight line, similar to a crossword puzzle
         for(int i = 0; i < blocks.length; i++) {
-            blocks[i].setX(X_MAX / 2 + (BASE_GRID * i));
+            blocks[i].setX((X_MAX / 2) + (BASE_GRID * i));
         }
     }
 }

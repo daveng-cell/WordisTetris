@@ -9,10 +9,10 @@ import java.io.IOException;
 
 public class WordApplication extends Application {
     @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(WordApplication.class.getResource("mainView.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 320, 240);
-        stage.setTitle("Hello!");
+    public void start(Stage stage) {
+        Board board = new Board();
+        Scene scene = new Scene(board.getVisualBoard());
+        stage.setTitle("Wordris");
         stage.setScene(scene);
         stage.show();
     }

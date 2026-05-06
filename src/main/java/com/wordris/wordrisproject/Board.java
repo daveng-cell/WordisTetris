@@ -3,6 +3,8 @@ package com.wordris.wordrisproject;
 import javafx.scene.Scene;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+
+import java.util.ArrayDeque;
 import java.util.Queue;
 
 public class Board {
@@ -17,19 +19,24 @@ public class Board {
     private final Rectangle[][] visualGrid = new Rectangle[Y_MAX / BASE_GRID][X_MAX / BASE_GRID];
 
     private final Pane visualBoard = new Pane();
-    private final Scene scene = new Scene(visualBoard, X_MAX, Y_MAX);
-
+    
     // These items are separate from the board, but interact with the board in some way
     private Polyomino current;
     private Polyomino reserved;
     private Queue<Polyomino> polyominoQueue;
     private WordCalculator wordCalculator;
 
+    public Board() {
+        polyominoQueue = new ArrayDeque<>();
+        // wordCalculator = new WordCalculator();
+        visualBoard.setStyle("-fx-background-color: black;");
+    }
+
     // Clears the board and resets the letterBoard state 
     public boolean resetBoard() {
         try {
             visualBoard.getChildren().clear(); 
-            
+
             for (int row = 0; row < Y_MAX / BASE_GRID; row++) {
                 for (int col = 0; col < X_MAX / BASE_GRID; col++) {
                     letterBoard[row][col] = '\0';
@@ -150,17 +157,22 @@ public class Board {
             int col = (int) shapes[i].getX()/BASE_GRID; 
             int row = (int) shapes[i].getY()/BASE_GRID;
             letterBoard[row][col] = letters[i];  
-            visualGrid[row][col] = shapes[i]; 
-            visualBoard.getChildren().add(shapes[i]); 
+            visualGrid[row][col] = shapes[i];
         }
 
         getNextPolyomino(); 
 
     }
 
+    // Gets next polyomino in queue 
     public void getNextPolyomino() {
         if (!polyominoQueue.isEmpty()) {
             current = polyominoQueue.poll();
         }
+    }
+
+    // Returns the visual board Pane 
+    public Pane getVisualBoard() {
+        return visualBoard;
     }
 }

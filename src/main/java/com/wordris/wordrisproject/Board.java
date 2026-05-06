@@ -19,7 +19,7 @@ public class Board {
     private final Rectangle[][] visualGrid = new Rectangle[Y_MAX / BASE_GRID][X_MAX / BASE_GRID];
 
     private final Pane visualBoard = new Pane();
-    
+
     // These items are separate from the board, but interact with the board in some way
     private Polyomino current;
     private Polyomino reserved;
@@ -29,6 +29,7 @@ public class Board {
     public Board() {
         polyominoQueue = new ArrayDeque<>();
         // wordCalculator = new WordCalculator();
+        visualBoard.setPrefSize(X_MAX, Y_MAX);
         visualBoard.setStyle("-fx-background-color: black;");
     }
 

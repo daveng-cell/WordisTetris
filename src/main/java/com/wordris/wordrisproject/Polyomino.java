@@ -19,4 +19,17 @@ public class Polyomino {
             shapes[i] = blocks[i];
         }
     }
+
+    // Getters so Board can access 
+    public char[] getLetters() {
+        return letters;
+    }
+
+    public Rectangle[] getShapes() {
+        return shapes;
+    }
+    
+    public int getSize() {
+        return letters.length; 
+    }
 }

@@ -5,8 +5,8 @@ import javafx.scene.shape.Rectangle;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayDeque;
 import java.util.ArrayList;
-import java.util.PriorityQueue;
 import java.util.Random;
 
 import static com.wordris.wordrisproject.Board.BASE_GRID;
@@ -28,15 +28,18 @@ enum PolyominoState {
 //}
 
 public class PolyominoGenerator {
-    private PolyominoState state = PolyominoState.PRE_SUFFIX;
-
-    // TODO: create our bank of base words
+    private PolyominoState state;
     private final ArrayList<String> prefixAndSuffixBank = new ArrayList<>();
     private final ArrayList<String> baseBank = new ArrayList<>();
 
+    PolyominoGenerator(PolyominoState state) {
+        this.state = state;
+        createStringBank();
+    }
+
     // May need improvements
-    public PriorityQueue<Polyomino> generatePolyominos(int numOfPolyominoes) {
-        PriorityQueue<Polyomino> currQueue = new PriorityQueue<>();
+    public ArrayDeque<Polyomino> generatePolyominos(int numOfPolyominoes) {
+        ArrayDeque<Polyomino> currQueue = new ArrayDeque<>();
 
         for(int i = 0; i < numOfPolyominoes; i++) {
             currQueue.add(makePoly());
@@ -54,18 +57,21 @@ public class PolyominoGenerator {
         this.state = state;
     }
 
-    // Requires JSON file or whatever kind of file with all prefixes, suffixes and bases to implement
+    // Requires file with all prefixes, suffixes and bases to implement
     // Takes that file and implants them into the Strin banks
     private void createStringBank() {
         try {
-            BufferedReader pre_suffix_br = new BufferedReader(new FileReader("Prefix-Suffix_Bank"));
+            BufferedReader prefix_br = new BufferedReader(new FileReader("Prefix_Bank"));
+            BufferedReader suffix_br = new BufferedReader(new FileReader("Suffix_Bank"));
             BufferedReader base_br = new BufferedReader(new FileReader("Base_Bank"));
             String line;
 
-            while((line = pre_suffix_br.readLine()) != null) {
+            while((line = prefix_br.readLine()) != null) {
                 prefixAndSuffixBank.add(line);
             }
-
+            while((line = suffix_br.readLine()) != null) {
+                prefixAndSuffixBank.add(line);
+            }
             while((line = base_br.readLine()) != null) {
                 baseBank.add(line);
             }

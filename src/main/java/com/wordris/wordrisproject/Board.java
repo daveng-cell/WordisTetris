@@ -24,10 +24,14 @@ public class Board {
     private Polyomino current;
     private Polyomino reserved;
     private Queue<Polyomino> polyominoQueue;
+    private PolyominoGenerator polyominoGenerator;
     private WordCalculator wordCalculator;
 
     public Board() {
-        polyominoQueue = new ArrayDeque<>();
+        // Creates generator, then creates a queue of a particular size, which right now is just a sample number and should change
+        polyominoGenerator = new PolyominoGenerator(PolyominoState.PRE_SUFFIX);
+        polyominoQueue = polyominoGenerator.generatePolyominos(40);
+
         // wordCalculator = new WordCalculator();
         visualBoard.setPrefSize(X_MAX, Y_MAX);
         visualBoard.setStyle("-fx-background-color: black;");

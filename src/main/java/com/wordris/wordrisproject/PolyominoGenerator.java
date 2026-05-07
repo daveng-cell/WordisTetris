@@ -2,18 +2,13 @@ package com.wordris.wordrisproject;
 
 import javafx.scene.shape.Rectangle;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Random;
+import java.util.*;
 
 import static com.wordris.wordrisproject.Board.BASE_GRID;
 import static com.wordris.wordrisproject.Board.X_MAX;
 
 enum PolyominoState {
-    PRE_SUFFIX, BASE
+    PREFIX, SUFFIX, BASE
 }
 
 // Unsure of whether to do different shapes yet, will do straight lines first
@@ -29,7 +24,8 @@ enum PolyominoState {
 
 public class PolyominoGenerator {
     private PolyominoState state;
-    private final ArrayList<String> prefixAndSuffixBank = new ArrayList<>();
+    private final ArrayList<String> prefixBank = new ArrayList<>();
+    private final ArrayList<String> suffixBank = new ArrayList<>();
     private final ArrayList<String> baseBank = new ArrayList<>();
 
     PolyominoGenerator(PolyominoState state) {
@@ -43,11 +39,14 @@ public class PolyominoGenerator {
 
         for(int i = 0; i < numOfPolyominoes; i++) {
             currQueue.add(makePoly());
-            if(state == PolyominoState.PRE_SUFFIX) {
+            if (state == PolyominoState.PREFIX) {
                 setState(PolyominoState.BASE);
             }
+            else if (state == PolyominoState.BASE) {
+                setState(PolyominoState.SUFFIX);
+            }
             else {
-                setState(PolyominoState.PRE_SUFFIX);
+                setState(PolyominoState.PREFIX);
             }
         }
         return currQueue;
@@ -60,34 +59,29 @@ public class PolyominoGenerator {
     // Requires file with all prefixes, suffixes and bases to implement
     // Takes that file and implants them into the Strin banks
     private void createStringBank() {
-        try {
-            BufferedReader prefix_br = new BufferedReader(new FileReader("Prefix_Bank"));
-            BufferedReader suffix_br = new BufferedReader(new FileReader("Suffix_Bank"));
-            BufferedReader base_br = new BufferedReader(new FileReader("Base_Bank"));
-            String line;
+        Set<String> tempSet;
+        tempSet = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Prefix_Bank");
+        Objects.requireNonNull(prefixBank).addAll(tempSet);
 
-            while((line = prefix_br.readLine()) != null) {
-                prefixAndSuffixBank.add(line);
-            }
-            while((line = suffix_br.readLine()) != null) {
-                prefixAndSuffixBank.add(line);
-            }
-            while((line = base_br.readLine()) != null) {
-                baseBank.add(line);
-            }
+        tempSet = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Suffix_Bank");
+        Objects.requireNonNull(suffixBank).addAll(tempSet);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        tempSet = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Base_Bank");
+        Objects.requireNonNull(baseBank).addAll(tempSet);
+
     }
 
     private String getRandomString() {
         Random r = new Random();
         int bound;
         ArrayList<String> currBank = switch (state) {
-            case PRE_SUFFIX -> {
-                bound = prefixAndSuffixBank.size();
-                yield prefixAndSuffixBank;
+            case PREFIX -> {
+                bound = prefixBank.size();
+                yield prefixBank;
+            }
+            case SUFFIX -> {
+                bound = suffixBank.size();
+                yield suffixBank;
             }
             case BASE -> {
                 bound = baseBank.size();

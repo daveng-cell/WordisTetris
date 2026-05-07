@@ -29,7 +29,7 @@ public class Board {
 
     public Board() {
         // Creates generator, then creates a queue of a particular size, which right now is just a sample number and should change
-        polyominoGenerator = new PolyominoGenerator(PolyominoState.PRE_SUFFIX);
+        polyominoGenerator = new PolyominoGenerator(PolyominoState.PREFIX);
         polyominoQueue = polyominoGenerator.generatePolyominos(40);
 
         // wordCalculator = new WordCalculator();

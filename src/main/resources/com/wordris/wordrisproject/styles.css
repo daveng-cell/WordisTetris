@@ -1,0 +1,216 @@
+ /*Root */
+.menu-root {
+    -fx-background-color: #0a0a0f;
+    -fx-min-height: 600px;
+    -fx-min-width: 500px;
+}
+ 
+.game-root {
+    -fx-background-color: #0a0a0f;
+}
+ 
+/*Title*/
+.title-block {
+    -fx-padding: 80 0 32 0;
+}
+ 
+.title-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 64px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f0e94a;
+    -fx-effect: dropshadow(gaussian, #f0e94a88, 24, 0.4, 0, 0);
+}
+ 
+.subtitle-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 13px;
+    -fx-text-fill: #888899;
+}
+ 
+/*Decorative tiles*/
+.tile-row {
+    -fx-padding: 0 0 48 0;
+}
+ 
+.deco-tile {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 20px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0a0a0f;
+    -fx-background-color: #f0e94a;
+    -fx-background-radius: 4px;
+    -fx-min-width: 36px;
+    -fx-min-height: 36px;
+    -fx-alignment: center;
+}
+ 
+/*Buttons*/
+.button-block {
+    -fx-padding: 0 0 60 0;
+}
+ 
+.btn-primary {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #0a0a0f;
+    -fx-background-color: #f0e94a;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-padding: 14 0 14 0;
+    -fx-effect: dropshadow(gaussian, #f0e94a66, 12, 0.3, 0, 2);
+}
+ 
+.btn-primary:hover {
+    -fx-background-color: #fff176;
+    -fx-effect: dropshadow(gaussian, #f0e94aaa, 20, 0.5, 0, 0);
+}
+ 
+.btn-secondary {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #888899;
+    -fx-background-color: transparent;
+    -fx-border-color: #333344;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-padding: 10 0 10 0;
+}
+ 
+.btn-secondary:hover {
+    -fx-text-fill: #f0e94a;
+    -fx-border-color: #f0e94a;
+}
+ 
+.btn-small {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 10px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #888899;
+    -fx-background-color: transparent;
+    -fx-border-color: #333344;
+    -fx-border-radius: 4px;
+    -fx-background-radius: 4px;
+    -fx-cursor: hand;
+    -fx-padding: 6 4 6 4;
+    -fx-alignment: center;
+}
+ 
+.btn-small:hover {
+    -fx-text-fill: #f0e94a;
+    -fx-border-color: #f0e94a;
+}
+ 
+/*Side panel*/
+.side-panel {
+    -fx-background-color: #10101a;
+    -fx-min-width: 158px;
+    -fx-max-width: 158px;
+    -fx-border-color: #1e1e2e;
+    -fx-border-width: 0 0 0 1;
+}
+ 
+/*Info cards*/
+.info-card {
+    -fx-background-color: #1a1a2a;
+    -fx-background-radius: 6px;
+    -fx-padding: 10 8 10 8;
+}
+ 
+.card-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 10px;
+    -fx-text-fill: #888899;
+    -fx-font-weight: bold;
+}
+ 
+.card-value {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 28px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f0e94a;
+}
+ 
+/*Piece preview panes*/
+.piece-preview-pane {
+    -fx-background-color: #0d0d18;
+    -fx-background-radius: 4px;
+    -fx-border-color: #2a2a3d;
+    -fx-border-radius: 4px;
+    -fx-border-width: 1px;
+}
+ 
+/*Board area*/
+.board-wrapper {
+    -fx-background-color: #0a0a0f;
+}
+ 
+.board-title-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 13px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #555566;
+    -fx-padding: 0 0 6 0;
+}
+ 
+.board-pane {
+    -fx-background-color: #000000;
+    -fx-border-color: #f0e94a;
+    -fx-border-width: 2px;
+    -fx-effect: dropshadow(gaussian, #f0e94a44, 16, 0.2, 0, 0);
+}
+ 
+/*Top bar*/
+.top-bar {
+    -fx-background-color: #0d0d18;
+    -fx-border-color: #1e1e2e;
+    -fx-border-width: 0 0 1 0;
+}
+ 
+.topbar-title {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f0e94a;
+}
+ 
+.topbar-status {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 13px;
+    -fx-text-fill: #555566;
+}
+ 
+/*Info popup*/
+.popup-root {
+    -fx-background-color: #10101a;
+    -fx-border-color: #f0e94a;
+    -fx-border-width: 2px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 30 30 30 30;
+}
+ 
+.popup-title {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 22px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #f0e94a;
+}
+ 
+.popup-label {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 12px;
+    -fx-font-weight: bold;
+    -fx-text-fill: #888899;
+}
+ 
+.popup-text {
+    -fx-font-family: "Courier New";
+    -fx-font-size: 12px;
+    -fx-text-fill: #ccccdd;
+    -fx-wrap-text: true;
+}
+ 

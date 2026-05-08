@@ -5,14 +5,16 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.IOException;
-
 public class WordApplication extends Application {
+
     @Override
-    public void start(Stage stage) {
-        Board board = new Board();
-        Scene scene = new Scene(board.getVisualBoard());
+    public void start(Stage stage) throws Exception {
+        FXMLLoader loader = new FXMLLoader(
+            getClass().getResource("/com/wordris/wordrisproject/menu.fxml")
+        );
+        Scene scene = new Scene(loader.load());
         stage.setTitle("Wordris");
+        stage.setResizable(false);
         stage.setScene(scene);
         stage.show();
     }

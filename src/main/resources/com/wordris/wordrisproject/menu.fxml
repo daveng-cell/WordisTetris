@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<StackPane xmlns="http://javafx.com/javafx"
+           xmlns:fx="http://javafx.com/fxml"
+           fx:controller="com.wordris.wordrisproject.MenuController"
+           stylesheets="@styles.css"
+           prefWidth="500" prefHeight="600">
+
+    <VBox alignment="CENTER" spacing="0" styleClass="menu-root">
+
+        <VBox alignment="CENTER" spacing="8" styleClass="title-block">
+            <Label text="WORDRIS" styleClass="title-label"/>
+        </VBox>
+
+        <HBox alignment="CENTER" spacing="4" styleClass="tile-row">
+            <Label text="W" styleClass="deco-tile"/>
+            <Label text="O" styleClass="deco-tile"/>
+            <Label text="R" styleClass="deco-tile"/>
+            <Label text="D" styleClass="deco-tile"/>
+            <Label text="R" styleClass="deco-tile"/>
+            <Label text="I" styleClass="deco-tile"/>
+            <Label text="S" styleClass="deco-tile"/>
+        </HBox>
+
+        <VBox alignment="CENTER" spacing="14" styleClass="button-block">
+            <Button text="PLAY" fx:id="playButton" styleClass="btn-primary" onAction="#onPlay" maxWidth="220"/>
+            <Button text="INFO" fx:id="infoButton" styleClass="btn-secondary" onAction="#onInfo" maxWidth="220"/>
+            <Button text="QUIT" fx:id="quitButton" styleClass="btn-secondary" onAction="#onQuit" maxWidth="220"/>
+        </VBox>
+
+    </VBox>
+</StackPane>

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.geometry.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.wordris.wordrisproject.GameController"
+            stylesheets="@styles.css"
+            styleClass="game-root"
+            prefWidth="900" prefHeight="720">
+
+    <top>
+        <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">
+            <padding><Insets top="10" right="20" bottom="10" left="20"/></padding>
+            <Label text="WORDRIS" styleClass="topbar-title"/>
+            <Label fx:id="statusLabel" text="" styleClass="topbar-status"/>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" styleClass="board-wrapper">
+            <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
+            <Label text="BOARD" styleClass="board-title-label"/>
+            <Pane fx:id="boardPane" styleClass="board-pane" prefWidth="300" prefHeight="600"/>
+        </VBox>
+    </center>
+
+    <right>
+        <VBox styleClass="side-panel" spacing="14" alignment="TOP_CENTER">
+            <padding><Insets top="20" right="14" bottom="20" left="14"/></padding>
+
+            <Label text="NEXT:" styleClass="card-label"/>
+            <VBox styleClass="info-card" spacing="12" alignment="TOP_CENTER" prefWidth="130" prefHeight="70">
+                <Pane fx:id="nextPane1" styleClass="piece-preview-pane" prefWidth="110" prefHeight="50"/>
+            </VBox>
+
+            <Label text="RESERVE:" styleClass="card-label"/>
+            <VBox styleClass="info-card" spacing="8" alignment="CENTER" prefWidth="130">
+                <Pane fx:id="reservedPane" styleClass="piece-preview-pane" prefWidth="110" prefHeight="50"/>
+                <Button text="SWITCH WITH RESERVE" styleClass="btn-small" onAction="#onSwapReserve" maxWidth="120" wrapText="true"/>
+            </VBox>
+
+            <VBox styleClass="info-card" spacing="4" alignment="CENTER" prefWidth="130">
+                <Label text="SCORE:" styleClass="card-label"/>
+                <Label fx:id="scoreLabel" text="0" styleClass="card-value"/>
+            </VBox>
+
+            <Button text="PAUSE" fx:id="pauseButton" styleClass="btn-secondary" onAction="#onPause" maxWidth="130"/>
+            <Button text="EXIT" fx:id="exitButton" styleClass="btn-secondary" onAction="#onExit" maxWidth="130"/>
+
+        </VBox>
+    </right>
+
+</BorderPane>

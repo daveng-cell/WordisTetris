@@ -52,7 +52,7 @@ public class MenuController {
 
         Label byLabel = new Label("BY:");
         byLabel.getStyleClass().add("popup-label");
-        Label byText = new Label("___________________________");
+        Label byText = new Label("Bleeeeeeeeehhhh");
         byText.getStyleClass().add("popup-text");
 
         Label aboutLabel = new Label("ABOUT:");

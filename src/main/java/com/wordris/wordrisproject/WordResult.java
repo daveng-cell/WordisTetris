@@ -1,62 +1,54 @@
 package com.wordris.wordrisproject;
 
-/*
- * WordResult represents a VALID word found on the board.
- *
- * Stores:
- * - parsed word information
- * - score earned
- * - location on board
- * - orientation
- *
- * This class allows Board/GameManager
- * to know:
- * - where a word exists
- * - how many points it gives
- * - which tiles to remove
- */
+//stores valid words to be assigned points by wordcalculator
 public class WordResult {
 
-    // Structured word information
-    public ParsedWord word;
+    private final ParsedWord parsedWord;
 
-    // Score earned from this word
-    public int score;
-
+    private final int score;
+    private final boolean horizontal;
     /*
-     * Coordinates:
-     *
-     * Horizontal:
+     * If horizontal:
      * fixedIndex = row
      * start/end = columns
      *
-     * Vertical:
+     * If vertical:
      * fixedIndex = column
      * start/end = rows
      */
-    public int fixedIndex;
-    public int start;
-    public int end;
-
-    // true = horizontal
-    // false = vertical
-    public boolean horizontal;
-
-    /*
-     * Constructor
-     */
-    public WordResult(ParsedWord word,
-                      int score,
-                      int fixedIndex,
-                      int start,
-                      int end,
-                      boolean horizontal) {
-
-        this.word = word;
+    private final int fixedIndex;
+    private final int start;
+    private final int end;
+    public WordResult(ParsedWord parsedWord, int score, boolean horizontal, int fixedIndex, int start, int end) {
+        this.parsedWord = parsedWord;
         this.score = score;
+        this.horizontal = horizontal;
         this.fixedIndex = fixedIndex;
         this.start = start;
         this.end = end;
-        this.horizontal = horizontal;
+    }
+    
+    public ParsedWord getParsedWord() {
+        return parsedWord;
+    }
+
+    public int getScore() {
+        return score;
+    }
+
+    public boolean isHorizontal() {
+        return horizontal;
+    }
+
+    public int getFixedIndex() {
+        return fixedIndex;
+    }
+
+    public int getStart() {
+        return start;
+    }
+
+    public int getEnd() {
+        return end;
     }
 }

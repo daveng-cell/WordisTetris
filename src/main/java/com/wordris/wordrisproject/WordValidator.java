@@ -3,10 +3,7 @@ package com.wordris.wordrisproject;
 import java.util.List;
 import java.util.Set;
 
-/*
- * Responsible ONLY for validating
- * parsed words.
- */
+// Responsible ONLY for validating parsed words.
 public class WordValidator {
 
     private final AffixBank bank;

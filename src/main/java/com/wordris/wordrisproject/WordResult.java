@@ -1,24 +1,14 @@
 package com.wordris.wordrisproject;
 
-//stores valid words to be assigned points by wordcalculator
+//valid detected word
 public class WordResult {
-
     private final ParsedWord parsedWord;
-
     private final int score;
     private final boolean horizontal;
-    /*
-     * If horizontal:
-     * fixedIndex = row
-     * start/end = columns
-     *
-     * If vertical:
-     * fixedIndex = column
-     * start/end = rows
-     */
     private final int fixedIndex;
     private final int start;
     private final int end;
+
     public WordResult(ParsedWord parsedWord, int score, boolean horizontal, int fixedIndex, int start, int end) {
         this.parsedWord = parsedWord;
         this.score = score;
@@ -27,7 +17,7 @@ public class WordResult {
         this.start = start;
         this.end = end;
     }
-    
+
     public ParsedWord getParsedWord() {
         return parsedWord;
     }

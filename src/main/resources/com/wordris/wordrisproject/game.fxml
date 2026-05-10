@@ -9,7 +9,7 @@
             fx:controller="com.wordris.wordrisproject.GameController"
             stylesheets="@styles.css"
             styleClass="game-root"
-            prefWidth="900" prefHeight="720">
+            prefWidth="600" prefHeight="720">
 
     <top>
         <HBox styleClass="top-bar" alignment="CENTER_LEFT" spacing="12">

@@ -1,165 +1,113 @@
 package com.wordris.wordrisproject;
-import java.util.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+
+//Scans board, coordinats parser/validator/scorer
 public class WordCalculator {
-    private final Base_Bank baseBank;
-    private final Prefix_Bank prefixBank;
-    private final Suffix_Bank suffixBank;
 
-    public WordCalculator(Base_Bank baseBank, Prefix_Bank prefixBank, Suffix_Bank suffixBank) {
-        this.baseBank = baseBank;
-        this.prefixBank = prefixBank;
-        this.suffixBank = suffixBank;
+    private final WordParser parser;
+    private final WordValidator validator;
+    private final ScoreCalculator scorer;
+
+    public WordCalculator() {
+
+        // load banks
+        var bases = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Base_Bank");
+
+        var prefixes = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Prefix_Bank");
+
+        var suffixes = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Suffix_Bank");
+
+        var prefixChains = new HashSet<String>();
+
+        var suffixChains = new HashSet<String>();
+
+        ChainBankLoader.loadChains("src/main/java/com/wordris/wordrisproject/Chain_Bank", prefixChains, suffixChains);
+
+        // bank bject
+
+        AffixBank bank = new AffixBank( bases, prefixes, suffixes, prefixChains, suffixChains);
+
+        //helpers
+
+        parser = new WordParser(bank);
+
+        validator = new WordValidator(bank);
+
+        scorer = new ScoreCalculator();
     }
 
+    //scans board
     public List<WordResult> checkForWords(Board board) {
 
-        List<WordResult> foundWords = new ArrayList<>();
+        List<WordResult> results = new ArrayList<>();
 
         char[][] grid = board.getLetterBoard();
 
-        int rows = grid.length;
-        int cols = grid[0].length;
+        scanHorizontal(grid, results);
 
-        // scan horizontally CAN UPDATE BASED ON HOW WE SCAN FOR WORDS
-        for (int row = 0; row < rows; row++) {
+        scanVertical(grid, results);
 
-            StringBuilder currentWord = new StringBuilder();
-            int startCol = 0;
+        return results;
+    }
 
-            for (int col = 0; col < cols; col++) {
+    // horizonatl scan
+    private void scanHorizontal(char[][] grid, List<WordResult> results) {
 
+        for (int row = 0; row < grid.length; row++) {
+            StringBuilder sb = new StringBuilder();
+            int startCol = -1;
+            for (int col = 0; col < grid[0].length; col++) {
                 char c = grid[row][col];
-
                 if (c != '\0') {
-                    if (currentWord.length() == 0) {
+                    if (sb.isEmpty()) {
                         startCol = col;
                     }
-                    currentWord.append(c);
+                    sb.append(c);
+                } else {
+                    evaluateSequence(sb,row,startCol,col - 1,true,results);
                 }
-                // break sequence or end of row → evaluate
-                if (c == '\0' || col == cols - 1) {
+            }
+            evaluateSequence(sb,row,startCol,grid[0].length - 1,true,results);
+        }
+    }
 
-                    if (currentWord.length() > 0) {
-                        evaluateSequence(
-                                currentWord.toString(),
-                                row,
-                                startCol,
-                                col - 1,
-                                foundWords
-                        );
-                        currentWord.setLength(0);
+    // vert scan
+    private void scanVertical(char[][] grid,List<WordResult> results) {
+
+        for (int col = 0; col < grid[0].length; col++) {
+            StringBuilder sb = new StringBuilder();
+
+            int startRow = -1;
+            for (int row = 0; row < grid.length; row++) {
+                char c = grid[row][col];
+                if (c != '\0') {
+                    if (sb.isEmpty()) {
+                        startRow = row;
                     }
+                    sb.append(c);
+                } else {
+                    evaluateSequence(sb, col, startRow, row - 1, false, results);
                 }
             }
+
+            evaluateSequence(sb,col,startRow,grid.length - 1,false,results);
         }
-
-        return foundWords;
-    }
-   
-  private void evaluateSequence(String sequence,
-                                  int row,
-                                  int startCol,
-                                  int endCol,
-                                  List<WordResult> results) {
-
-        ParsedWord parsed = parseWord(sequence);
-
-        if (isValid(parsed)) {
-
-            int score = calculateScoreByWord(parsed);
-
-            results.add(new WordResult(
-                    parsed,
-                    score,
-                    row,
-                    startCol,
-                    endCol
-            ));
-        }
-    } 
-//word parsing 
-private ParsedWord parseWord(String sequence) {
-
-        List<String> prefixes = new ArrayList<>();
-        List<String> suffixes = new ArrayList<>();
-        String base = sequence;
-
-        // --- PREFIX STRIP (left side greedy) ---
-        boolean foundPrefix = true;
-
-        while (foundPrefix) {
-            foundPrefix = false;
-
-            for (String p : prefixBank.getAll()) {
-                if (base.startsWith(p)) {
-                    prefixes.add(p);
-                    base = base.substring(p.length());
-                    foundPrefix = true;
-                    break;
-                }
-            }
-        }
-
-        // --- SUFFIX STRIP (right side greedy) ---
-        foundPrefix = true;
-
-        while (foundPrefix) {
-            foundPrefix = false;
-
-            for (String s : suffixBank.getAll()) {
-                if (base.endsWith(s)) {
-                    suffixes.add(0, s);
-                    base = base.substring(0, base.length() - s.length());
-                    foundPrefix = true;
-                    break;
-                }
-            }
-        }
-
-        return new ParsedWord(prefixes, base, suffixes);
     }
 
-//validation by banks
-    private boolean isValid(ParsedWord word) {
-
-        if (!baseBank.contains(word.base)) {
-            return false;
+    //word eval
+    private void evaluateSequence(StringBuilder sb,int fixedIndex,int start,int end, boolean horizontal,List<WordResult> results) {
+        if (sb.isEmpty()) {
+            return;
         }
-
-        if (!prefixBank.isValidChain(word.prefixes)) {
-            return false;
+        String word = sb.toString();
+        sb.setLength(0);
+        ParsedWord parsed = parser.parseWord(word);
+        if (validator.isValid(parsed)) {
+            int score = scorer.calculateScore(parsed);
+            results.add(new WordResult(parsed,score,horizontal,fixedIndex,start,end));
         }
-
-        if (!suffixBank.isValidChain(word.suffixes)) {
-            return false;
-        }
-
-        return true;
-    }
-    public int calculateScoreByWord(ParseWord word) {
-        int score = 0;
-
-        // base length
-        score += word.base.length() * 2;
-
-        // prefix complexity
-        score += word.prefixes.size() * 3;
-
-        // suffix complexity
-        score += word.suffixes.size() * 4;
-
-        // combo bonus
-        if (!word.prefixes.isEmpty() && !word.suffixes.isEmpty()) {
-            score += 5;
-        }
-
-        // chain bonus
-        int complexity = word.prefixes.size() + word.suffixes.size();
-        if (complexity >= 3) {
-            score *= 1.5;
-        }
-
-        return score;
     }
 }

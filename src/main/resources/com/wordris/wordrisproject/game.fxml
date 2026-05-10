@@ -23,7 +23,7 @@
         <VBox alignment="TOP_CENTER" styleClass="board-wrapper">
             <padding><Insets top="20" right="20" bottom="20" left="20"/></padding>
             <Label text="BOARD" styleClass="board-title-label"/>
-            <Pane fx:id="boardPane" styleClass="board-pane" prefWidth="300" prefHeight="600"/>
+            <Pane fx:id="boardPane" styleClass="board-pane" prefWidth="300" prefHeight="600" maxWidth="300" maxHeight="600"/>
         </VBox>
     </center>
 

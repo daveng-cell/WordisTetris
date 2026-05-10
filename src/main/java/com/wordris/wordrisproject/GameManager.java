@@ -17,19 +17,22 @@ public class GameManager {
         this.wordCalculator = new WordCalculator();
     }
 
-    public boolean startGame() {
-        if (isRunning) return false;
-        try {
-            currentRoundScore = 0;
-            currentBoard.resetBoard();
-            isRunning = true;
-            isPaused = false;
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+ public boolean startGame() {
+    System.out.println("startGame called, isRunning: " + isRunning);
+    if (isRunning) return false;
+    try {
+        currentRoundScore = 0;
+        isRunning = true;
+        isPaused = false;
+        System.out.println("About to call getNextPolyomino");
+        currentBoard.getNextPolyomino();
+        System.out.println("Game started, board children: " + currentBoard.getVisualBoard().getChildren().size());
+        return true;
+    } catch (Exception e) {
+        e.printStackTrace();
+        return false;
     }
-
+}
     public void updatePerFrame() {
         if (!isRunning || isPaused) return;
     }

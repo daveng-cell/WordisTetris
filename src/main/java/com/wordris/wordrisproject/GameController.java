@@ -7,6 +7,9 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
+import javafx.scene.shape.Rectangle;
+import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.stage.Stage;
 
 public class GameController {
@@ -28,11 +31,22 @@ public class GameController {
         gameManager = new GameManager();
         gameManager.startGame();
 
-        boardPane.getChildren().add(gameManager.getCurrentBoard().getVisualBoard());
+        Pane visualBoard = gameManager.getCurrentBoard().getVisualBoard();
+        visualBoard.setPrefSize(300, 600);
+        boardPane.getChildren().add(visualBoard);
+
+        pauseButton.setFocusTraversable(false);
+        exitButton.setFocusTraversable(false);
 
         setupGameLoop();
         setupKeyHandlers();
-        updateHUD();
+
+        scoreLabel.setText("0");
+        statusLabel.setText("");
+        updateNextPreview();
+
+        boardPane.setFocusTraversable(true);
+        boardPane.requestFocus();
     }
 
     private void setupGameLoop() {
@@ -41,7 +55,8 @@ public class GameController {
             public void handle(long now) {
                 if (gameManager.isRunning() && !gameManager.isPaused()) {
                     gameManager.updatePerFrame();
-                    updateHUD();
+                    scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
+                    statusLabel.setText("");
                 }
             }
         };
@@ -49,30 +64,96 @@ public class GameController {
     }
 
     private void setupKeyHandlers() {
-        boardPane.sceneProperty().addListener((obs, oldScene, newScene) -> {
-            if (newScene != null) {
-                newScene.setOnKeyPressed(event -> {
-                    if (!gameManager.isRunning() || gameManager.isPaused()) return;
-                    Board board = gameManager.getCurrentBoard();
-                    switch (event.getCode()) {
-                        case LEFT  -> board.moveCurrentPolyomino(-1);
-                        case RIGHT -> board.moveCurrentPolyomino(1);
-                        case DOWN  -> board.placeCurrentPolyomino();
-                        case C     -> board.switchReservedPolyomino();
-                        case P     -> onPause();
-                        default    -> {}
-                    }
-                    updateHUD();
-                });
+        boardPane.setFocusTraversable(true);
+        boardPane.setOnKeyPressed(event -> {
+            if (!gameManager.isRunning() || gameManager.isPaused()) return;
+            Board board = gameManager.getCurrentBoard();
+            System.out.println("Key pressed: " + event.getCode());
+            switch (event.getCode()) {
+                case LEFT -> board.moveCurrentPolyomino(-1);
+                case RIGHT -> board.moveCurrentPolyomino(1);
+                case DOWN -> {
+                    board.placeCurrentPolyomino();
+                    gameManager.onPiecePlaced();
+                    scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
+                    updateNextPreview();
+                    updateReservePreview();
+                }
+                case C -> {
+                    board.switchReservedPolyomino();
+                    updateReservePreview();
+                    updateNextPreview();
+                }
+                case P -> onPause();
+                default -> {}
             }
+            boardPane.requestFocus();
+            event.consume();
         });
     }
 
-    private void updateHUD() {
-        scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
-        statusLabel.setText(gameManager.isPaused() ? "PAUSED" : "");
-        // TODO: render nextPane1 with upcoming polyomino preview
-        // TODO: render reservedPane with reserved polyomino
+    private void updateNextPreview() {
+        nextPane1.getChildren().clear();
+        Polyomino next = gameManager.getCurrentBoard().peekNext();
+        if (next == null) return;
+
+        char[] letters = next.getLetters();
+        double paneWidth = nextPane1.getPrefWidth();
+        double paneHeight = nextPane1.getPrefHeight();
+        double blockSize = Math.min(paneWidth / letters.length, paneHeight);
+        double startX = (paneWidth - blockSize * letters.length) / 2;
+        double startY = (paneHeight - blockSize) / 2;
+
+        for (int i = 0; i < letters.length; i++) {
+            Rectangle rect = new Rectangle(
+                startX + i * blockSize, startY,
+                blockSize - 2, blockSize - 2
+            );
+            rect.setFill(javafx.scene.paint.Color.WHITE);
+            rect.setStroke(javafx.scene.paint.Color.YELLOW);
+
+            javafx.scene.text.Text text = new javafx.scene.text.Text(
+                String.valueOf(letters[i]).toUpperCase()
+            );
+            text.setFill(javafx.scene.paint.Color.BLACK);
+            text.setFont(Font.font("Courier New", FontWeight.BOLD, blockSize * 0.5));
+            text.setX(startX + i * blockSize + blockSize * 0.25);
+            text.setY(startY + blockSize * 0.65);
+
+            nextPane1.getChildren().addAll(rect, text);
+        }
+    }
+
+    private void updateReservePreview() {
+        reservedPane.getChildren().clear();
+        Polyomino reserved = gameManager.getCurrentBoard().getReserved();
+        if (reserved == null) return;
+
+        char[] letters = reserved.getLetters();
+        double paneWidth = reservedPane.getPrefWidth();
+        double paneHeight = reservedPane.getPrefHeight();
+        double blockSize = Math.min(paneWidth / letters.length, paneHeight);
+        double startX = (paneWidth - blockSize * letters.length) / 2;
+        double startY = (paneHeight - blockSize) / 2;
+
+        for (int i = 0; i < letters.length; i++) {
+            Rectangle rect = new Rectangle(
+                startX + i * blockSize, startY,
+                blockSize - 2, blockSize - 2
+            );
+            rect.setFill(javafx.scene.paint.Color.WHITE);
+            rect.setStroke(javafx.scene.paint.Color.YELLOW);
+
+            javafx.scene.text.Text text = new javafx.scene.text.Text(
+                String.valueOf(letters[i]).toUpperCase()
+            );
+            text.setFill(javafx.scene.paint.Color.BLACK);
+            text.setFont(Font.font("Courier New", FontWeight.BOLD, blockSize * 0.5));
+            text.setX(startX + i * blockSize + blockSize * 0.25);
+            text.setY(startY + blockSize * 0.65);
+
+            reservedPane.getChildren().addAll(rect, text);
+        }
     }
 
     @FXML
@@ -92,7 +173,9 @@ public class GameController {
     protected void onSwapReserve() {
         if (gameManager.isRunning() && !gameManager.isPaused()) {
             gameManager.getCurrentBoard().switchReservedPolyomino();
-            updateHUD();
+            updateReservePreview();
+            updateNextPreview();
+            scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
         }
     }
 

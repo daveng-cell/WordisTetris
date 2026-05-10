@@ -1,11 +1,14 @@
 package com.wordris.wordrisproject;
 
-import javafx.scene.shape.Rectangle;
-
-import java.util.*;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Objects;
+import java.util.Random;
+import java.util.Set;
 
 import static com.wordris.wordrisproject.Board.BASE_GRID;
-import static com.wordris.wordrisproject.Board.X_MAX;
+
+import javafx.scene.shape.Rectangle;
 
 enum PolyominoState {
     PREFIX, SUFFIX, BASE
@@ -108,9 +111,11 @@ public class PolyominoGenerator {
     }
 
     private void positionBlocks(Rectangle[] blocks) {
-        // In an array of Rectangles, parts of a polyomino is placed as a straight line, similar to a crossword puzzle
-        for(int i = 0; i < blocks.length; i++) {
-            blocks[i].setX((X_MAX / 2) + (BASE_GRID * i));
-        }
+    for (int i = 0; i < blocks.length; i++) {
+        blocks[i].setX(BASE_GRID * i);
+        blocks[i].setY(0);
+        blocks[i].setFill(javafx.scene.paint.Color.WHITE);
+        blocks[i].setStroke(javafx.scene.paint.Color.YELLOW);
     }
+}
 }

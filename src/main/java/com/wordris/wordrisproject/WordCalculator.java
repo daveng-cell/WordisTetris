@@ -44,7 +44,7 @@ public class WordCalculator {
 
         List<WordResult> results = new ArrayList<>();
 
-        char[][] grid = board.getLetterBoard();
+        char[][] grid = board.getLetterBoardCopy();
 
         scanHorizontal(grid, results);
 

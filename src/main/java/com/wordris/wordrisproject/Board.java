@@ -180,4 +180,12 @@ public class Board {
     public Pane getVisualBoard() {
         return visualBoard;
     }
+
+    public char[][] getLetterBoardCopy() {
+        char[][] copy = new char[letterBoard.length][letterBoard[0].length];
+        for (int r = 0; r < letterBoard.length; r++) {
+            System.arraycopy(letterBoard[r],0,copy[r],0,letterBoard[r].length);
+        }
+        return copy;
+    }
 }

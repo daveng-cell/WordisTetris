@@ -33,15 +33,14 @@ class WordCalculatorTest {
         }
     }
 
-    // basic nor affix word test
+    // basic no affix word test should not score
     @Test
-    void testBaseWordDetected() {
+    void testBaseWordRejectedWithoutAffix() {
         placeHorizontalWord("run", 5, 2);
         List<WordResult> results = calculator.checkForWords(board);
-        assertFalse(results.isEmpty());
-        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("run")));
+        assertTrue(results.isEmpty());
     }
-
+    
     //single prefix test
     @Test
     void testPrefixWordDetected() {
@@ -83,16 +82,12 @@ class WordCalculatorTest {
     //vertical scan test
     @Test
     void testVerticalWordDetected() {
-        char[][] grid = board.getLetterBoardCopy();
+    placeVerticalWord("overrun", 1, 3);
 
-        String word = "run";
-        for (int i = 0; i < word.length(); i++) {
-            grid[1 + i][3] = word.charAt(i);
-        }
+    List<WordResult> results = calculator.checkForWords(board);
 
-        List<WordResult> results = calculator.checkForWords(board);
-
-        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("run")));
+    assertTrue(results.stream()
+        .anyMatch(r -> r.getParsedWord().getBase().equals("run")));
     }
 
     //affix bonus test

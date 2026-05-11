@@ -1,46 +1,32 @@
 package com.wordris.wordrisproject;
 
 import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.HashSet;
 import java.util.Set;
 
-//loading files into Sets
+// Loads word banks from resource files
 public class BankLoader {
 
-    /*
-     * Loads every non-empty line
-     * into a Set<String>.
-     */
-    public static Set<String> loadStringSet(
-            String path) {
+    public static Set<String> loadStringSet(String resourcePath) {
 
-        Set<String> result =
-                new HashSet<>();
-
-        try (BufferedReader br =
-                     new BufferedReader(
-                             new FileReader(path))) {
-
+        Set<String> words = new HashSet<>();
+        try (InputStream input = BankLoader.class.getResourceAsStream(resourcePath); BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
             String line;
-
-            while ((line = br.readLine()) != null) {
-
-                line = line.trim();
-
+            while ((line = reader.readLine()) != null) {
+                line = line.trim().toLowerCase();
                 if (!line.isEmpty()) {
-                    result.add(line);
+                    words.add(line);
                 }
             }
 
-        } catch (IOException e) {
-
+        } catch (Exception e) {
             throw new RuntimeException(
-                    "Failed loading file: " + path
+                "Failed to load bank: " + resourcePath, e
             );
         }
 
-        return result;
+        return words;
     }
 }

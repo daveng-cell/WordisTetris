@@ -18,62 +18,45 @@ public class WordParser {
         this.baseBank = bank.getBases();
     }
 
-    // Parses a word into: prefixes + base + suffixes
-    public ParsedWord parseWord(String word) {
-        List<String> prefixes = new ArrayList<>();
-        List<String> suffixes = new ArrayList<>();
-        String working = word;
+    public parseWord(String word){
+        ParsedWord result = parseRecursive(word, new ArrayList<>(), new ArrayList<>());
 
-        // Prefix parsing
-        boolean found = true;
+        if(result == null){
+            return new ParsedWord(new ArrayList<>(), word, new ArratList<>());
+        }
+        return result;
+    }
 
-        while (found) {
-            found = false;
-            String bestMatch = null;
-            
-            // Longest-match prefix search
-            for (String prefix : prefixBank) {
-                if (working.startsWith(prefix)) {
-                    if (bestMatch == null || prefix.length() > bestMatch.length()) {
-                        bestMatch = prefix;
-                    }
+    private ParsedWord parseRecursive(String working, List<String> prefixes, List<String> suffixes) {
+        // success condition
+        if (baseBank.contains(working)) {
+            return new ParsedWord( new ArrayList<>(prefixes), working, new ArrayList<>(suffixes));
+        }
+        // try prefixes
+        for (String prefix : prefixBank) {
+            if (working.startsWith(prefix) && working.length() > prefix.length()) {
+                prefixes.add(prefix);
+                ParsedWord result = parseRecursive( working.substring(prefix.length()), prefixes, suffixes);
+                prefixes.remove(prefixes.size() - 1);
+                if (result != null) {
+                    return result;
                 }
             }
-
-            // Remove best prefix
-            if (bestMatch != null) {
-                prefixes.add(bestMatch);
-                working = working.substring(bestMatch.length());
-                found = true;
-            }
         }
+        //try suffixes
+        for (String suffix : suffixBank) {
 
-        // Suffix parsing
-        found = true;
-        while (found) {
-            // Stop stripping once remaining word is valid base
-            if (baseBank.contains(working)) {
-                break;
-            }
-            found = false;
-            String bestMatch = null;
-            // Longest-match suffix search
-            for (String suffix : suffixBank) {
-                if (working.endsWith(suffix)) {
-                    if (bestMatch == null || suffix.length() > bestMatch.length()) {
-                        bestMatch = suffix;
-                    }
+            if (working.endsWith(suffix) && working.length() > suffix.length()) {
+                suffixes.add(0, suffix);
+                ParsedWord result = parseRecursive( working.substring( 0, working.length() - suffix.length()), prefixes, suffixes);
+                suffixes.remove(0);
+
+                if (result != null) {
+                    return result;
                 }
             }
-
-            // Remove best suffix
-            if (bestMatch != null) {
-                suffixes.add(0, bestMatch);
-                working = working.substring(0, working.length() - bestMatch.length());
-                found = true;
-            }
         }
-
-        return new ParsedWord(prefixes, working, suffixes);
+        // no valid parse found
+        return null;
     }
 }

@@ -10,7 +10,7 @@ public class BankLoader {
     public static Set<String> loadStringSet(String resourcePath) {
 
         Set<String> words = new HashSet<>();
-        try (InputStream input = BankLoader.class.getResourceAsStream(resourcePath); BufferedReader reader = new BufferedReader(new InputStreamReader(input))) {
+        try (BufferedReader br = new BufferedReader(new FileReader(filePath))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 line = line.trim().toLowerCase();
@@ -21,7 +21,7 @@ public class BankLoader {
 
         } catch (Exception e) {
             throw new RuntimeException(
-                "Failed to load bank: " + resourcePath, e
+                "Failed to load bank: " + filePath, e
             );
         }
         return words;

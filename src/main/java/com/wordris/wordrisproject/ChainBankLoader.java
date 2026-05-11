@@ -15,6 +15,8 @@ public class ChainBankLoader {
             String line;
             while ((line = br.readLine()) != null) {
                 line = line.trim();
+                line = line.replaceAll("\\s+", "");
+
                 if (line.equalsIgnoreCase("PREFIX:")) {
                     readingPrefixes = true;
                     readingSuffixes = false;

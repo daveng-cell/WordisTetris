@@ -5,75 +5,90 @@ import java.util.List;
 import java.util.Set;
 
 // Responsible ONLY for parsing words
-// Longest-match parsing
+// Longest-match + backtracking parsing
 public class WordParser {
-    // Banks used during parsing
+
     private final Set<String> prefixBank;
     private final Set<String> suffixBank;
     private final Set<String> baseBank;
+
+    private final List<String> sortedPrefixes;
+    private final List<String> sortedSuffixes;
 
     public WordParser(AffixBank bank) {
         this.prefixBank = bank.getPrefixes();
         this.suffixBank = bank.getSuffixes();
         this.baseBank = bank.getBases();
+
+        sortedPrefixes = new ArrayList<>(prefixBank);
+        sortedSuffixes = new ArrayList<>(suffixBank);
+
+        sortedPrefixes.sort((a, b) -> Integer.compare(b.length(), a.length()));
+        sortedSuffixes.sort((a, b) -> Integer.compare(b.length(), a.length()));
     }
 
-    // Parses a word into: prefixes + base + suffixes
+    // ENTRY POINT
     public ParsedWord parseWord(String word) {
-        List<String> prefixes = new ArrayList<>();
-        List<String> suffixes = new ArrayList<>();
-        String working = word;
+        if (word == null) {
+            return new ParsedWord(new ArrayList<>(), "", new ArrayList<>());
+        }
 
-        // Prefix parsing
-        boolean found = true;
+        word = word.toLowerCase();
+        ParsedWord result = parseRecursive(word, new ArrayList<>(), new ArrayList<>());
 
-        while (found) {
-            found = false;
-            String bestMatch = null;
-            
-            // Longest-match prefix search
-            for (String prefix : prefixBank) {
-                if (working.startsWith(prefix)) {
-                    if (bestMatch == null || prefix.length() > bestMatch.length()) {
-                        bestMatch = prefix;
-                    }
+        // fallback
+        if (result == null) {
+            return new ParsedWord(new ArrayList<>(), word, new ArrayList<>());
+        }
+
+        return result;
+    }
+
+    // RECURSIVE BACKTRACKING PARSER
+    private ParsedWord parseRecursive(
+            String working,
+            List<String> prefixes,
+            List<String> suffixes
+    ) {
+
+        // SUCCESS CONDITION
+        if (baseBank.contains(working)) {
+            return new ParsedWord( new ArrayList<>(prefixes), working, new ArrayList<>(suffixes));
+        }
+
+        // Try PREFIXES
+        for (String prefix : sortedPrefixes) {
+            if (working.startsWith(prefix)) {
+
+                prefixes.add(prefix);
+
+                ParsedWord result = parseRecursive( working.substring(prefix.length()), prefixes, suffixes);
+
+                prefixes.remove(prefixes.size() - 1);
+
+                if (result != null) {
+                    return result;
                 }
-            }
-
-            // Remove best prefix
-            if (bestMatch != null) {
-                prefixes.add(bestMatch);
-                working = working.substring(bestMatch.length());
-                found = true;
             }
         }
 
-        // Suffix parsing
-        found = true;
-        while (found) {
-            // Stop stripping once remaining word is valid base
-            if (baseBank.contains(working)) {
-                break;
-            }
-            found = false;
-            String bestMatch = null;
-            // Longest-match suffix search
-            for (String suffix : suffixBank) {
-                if (working.endsWith(suffix)) {
-                    if (bestMatch == null || suffix.length() > bestMatch.length()) {
-                        bestMatch = suffix;
-                    }
-                }
-            }
+        // Try SUFFIXES
+        for (String suffix : sortedSuffixes) {
+            if (working.endsWith(suffix)) {
 
-            // Remove best suffix
-            if (bestMatch != null) {
-                suffixes.add(0, bestMatch);
-                working = working.substring(0, working.length() - bestMatch.length());
-                found = true;
+                suffixes.add(suffix);
+
+                ParsedWord result = parseRecursive( working.substring(0, working.length() - suffix.length()), prefixes, suffixes);
+
+                suffixes.remove(suffixes.size() - 1);
+
+                if (result != null) {
+                    return result;
+                }
             }
         }
 
-        return new ParsedWord(prefixes, working, suffixes);
+        // FAILURE
+        return null;
     }
 }

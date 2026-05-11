@@ -39,7 +39,7 @@
             <Label text="RESERVE:" styleClass="card-label"/>
             <VBox styleClass="info-card" spacing="8" alignment="CENTER" prefWidth="130">
                 <Pane fx:id="reservedPane" styleClass="piece-preview-pane" prefWidth="110" prefHeight="50"/>
-                <Button text="SWITCH WITH RESERVE" styleClass="btn-small" onAction="#onSwapReserve" maxWidth="120" wrapText="true"/>
+                <Button text="SWITCH WITH RESERVE" fx:id="swapButton" styleClass="btn-small" onAction="#onSwapReserve" maxWidth="120" wrapText="true"/>
             </VBox>
 
             <VBox styleClass="info-card" spacing="4" alignment="CENTER" prefWidth="130">

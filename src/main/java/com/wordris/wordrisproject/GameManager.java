@@ -17,42 +17,46 @@ public class GameManager {
         this.wordCalculator = new WordCalculator();
     }
 
- public boolean startGame() {
-    System.out.println("startGame called, isRunning: " + isRunning);
-    if (isRunning) return false;
-    try {
-        currentRoundScore = 0;
-        isRunning = true;
-        isPaused = false;
-        System.out.println("About to call getNextPolyomino");
-        currentBoard.getNextPolyomino();
-        System.out.println("Game started, board children: " + currentBoard.getVisualBoard().getChildren().size());
-        return true;
-    } catch (Exception e) {
-        e.printStackTrace();
-        return false;
+    public boolean startGame() {
+        System.out.println("startGame called, isRunning: " + isRunning);
+        if (isRunning) return false;
+        try {
+            currentRoundScore = 0;
+            isRunning = true;
+            isPaused = false;
+            System.out.println("About to call getNextPolyomino");
+            currentBoard.getNextPolyomino();
+            System.out.println("Game started, board children: " + currentBoard.getVisualBoard().getChildren().size());
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
-}
     public void updatePerFrame() {
         if (!isRunning || isPaused) return;
+        if (currentBoard.isGameOver()) {
+            endGame();
+        }
     }
 
     public void onPiecePlaced() {
         if (!isRunning || isPaused) return;
 
-        List<WordResult> foundWords = wordCalculator.checkForWords(currentBoard);
+        if (currentBoard.isGameOver()) {
+            endGame();
+            return;
+        }
 
+        List<WordResult> foundWords = wordCalculator.checkForWords(currentBoard);
         for (WordResult result : foundWords) {
             updateScore(result.getScore());
-
             int fixedPixel = result.getFixedIndex() * Board.BASE_GRID;
             int startPixel = result.getStart() * Board.BASE_GRID;
             int endPixel = result.getEnd() * Board.BASE_GRID;
-
             if (result.isHorizontal()) {
                 currentBoard.removeWord(startPixel, fixedPixel, endPixel, fixedPixel);
             }
-            
         }
     }
 

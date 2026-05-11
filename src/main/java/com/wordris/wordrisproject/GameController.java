@@ -21,6 +21,7 @@ public class GameController {
     @FXML private Pane  nextPane1;
     @FXML private Button pauseButton;
     @FXML private Button exitButton;
+    @FXML private Button swapButton;
 
     private GameManager gameManager;
     private AnimationTimer gameLoop;
@@ -37,6 +38,7 @@ public class GameController {
 
         pauseButton.setFocusTraversable(false);
         exitButton.setFocusTraversable(false);
+        swapButton.setFocusTraversable(false);
 
         setupGameLoop();
         setupKeyHandlers();
@@ -57,10 +59,28 @@ public class GameController {
                     gameManager.updatePerFrame();
                     scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
                     statusLabel.setText("");
+                } else if (!gameManager.isRunning()) {
+                    gameLoop.stop();
+                    navigateToGameOver();
                 }
             }
         };
         gameLoop.start();
+    }
+
+    private void navigateToGameOver() {
+        try {
+            FXMLLoader loader = new FXMLLoader(
+                getClass().getResource("/com/wordris/wordrisproject/gameover.fxml")
+            );
+            Scene gameOverScene = new Scene(loader.load());
+            GameOverController controller = loader.getController();
+            controller.initGameOver(gameManager.getCurrentRoundScore());
+            stage.setScene(gameOverScene);
+            stage.setTitle("Wordris - Game Over");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void setupKeyHandlers() {
@@ -176,6 +196,7 @@ public class GameController {
             updateReservePreview();
             updateNextPreview();
             scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
+            boardPane.requestFocus();
         }
     }
 

@@ -127,15 +127,16 @@ public void moveCurrentPolyomino(int direction) {
     // Swaps current controllable block with the reserved block if reserved not null
     // else, pulls from queue 
     public void switchReservedPolyomino() {
+    System.out.println("Switch start: " + System.currentTimeMillis());
     if (reserved == null) {
-        // remove current from visual board
         for (int i = 0; i < current.getSize(); i++) {
             visualBoard.getChildren().remove(current.getCells()[i]);
         }
         reserved = current;
+        System.out.println("Before getNext: " + System.currentTimeMillis());
         getNextPolyomino();
+        System.out.println("After getNext: " + System.currentTimeMillis());
     } else {
-        // remove current from visual board
         for (int i = 0; i < current.getSize(); i++) {
             visualBoard.getChildren().remove(current.getCells()[i]);
         }
@@ -143,7 +144,6 @@ public void moveCurrentPolyomino(int direction) {
         current = reserved;
         reserved = temp;
 
-        // reset reserved piece position to top and re-add to visual board
         for (int i = 0; i < current.getSize(); i++) {
             Rectangle block = current.getShapes()[i];
             block.setX(i * BASE_GRID);
@@ -151,7 +151,8 @@ public void moveCurrentPolyomino(int direction) {
             visualBoard.getChildren().add(current.getCells()[i]);
         }
     }
-}
+        System.out.println("Switch end: " + System.currentTimeMillis());
+    }
 
     // Places block, from any height down to the lowest possible position on grid
         public void placeCurrentPolyomino() {
@@ -227,4 +228,17 @@ public void moveCurrentPolyomino(int direction) {
     public Polyomino peekNext() {
         return polyominoQueue.peek();
     }
+    public boolean isGameOver() {
+        if (current == null) return false;
+        for (Rectangle block : current.getShapes()) {
+            int col = (int) block.getX() / BASE_GRID;
+            int row = (int) block.getY() / BASE_GRID;
+            if (letterBoard[row][col] != '\0') {
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }

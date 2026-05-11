@@ -22,10 +22,14 @@ class WordCalculatorTest {
 
     // manually place word for test
     private void placeHorizontalWord(String word, int row, int colStart) {
-        char[][] grid = board.getLetterBoardCopy();
-
         for (int i = 0; i < word.length(); i++) {
-            grid[row][colStart + i] = word.charAt(i);
+            board.setLetter(row, colStart + i, word.charAt(i));
+        }
+    }
+
+     private void placeVerticalWord(String word, int rowStart, int col) {
+        for (int i = 0; i < word.length(); i++) {
+            board.setLetter(rowStart + i, col, word.charAt(i));
         }
     }
 
@@ -98,10 +102,7 @@ class WordCalculatorTest {
 
         List<WordResult> results = calculator.checkForWords(board);
 
-        WordResult result = results.stream()
-                .filter(r -> r.getParsedWord().getBase().equals("run"))
-                .findFirst()
-                .orElse(null);
+        WordResult result = results.stream().filter(r -> r.getParsedWord().getBase().equals("run")).findFirst().orElse(null);
 
         assertNotNull(result);
 

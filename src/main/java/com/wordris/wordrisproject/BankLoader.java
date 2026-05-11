@@ -1,8 +1,6 @@
 package com.wordris.wordrisproject;
 
-import java.io.BufferedReader;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -26,7 +24,6 @@ public class BankLoader {
                 "Failed to load bank: " + resourcePath, e
             );
         }
-
         return words;
     }
 }

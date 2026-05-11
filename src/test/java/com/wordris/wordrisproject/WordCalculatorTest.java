@@ -39,7 +39,7 @@ class WordCalculatorTest {
     void testBaseWordRejectedWithoutAffix() {
         placeHorizontalWord("run", 5, 2);
         List<WordResult> results = calculator.checkForWords(board);
-        assertTrue(results.isEmpty());
+        assertTrue(results.isEmpty(), "Base word no affix, should not be valid");
     }
     
     //single prefix test
@@ -49,7 +49,7 @@ class WordCalculatorTest {
 
         List<WordResult> results = calculator.checkForWords(board);
 
-        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("run")));
+        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("run")&& !r.getParsedWord().getPrefixes().isEmpty()), "Should detect base + prefix");
     }
 
     // single suffix test
@@ -59,7 +59,7 @@ class WordCalculatorTest {
 
         List<WordResult> results = calculator.checkForWords(board);
 
-        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("kiss")));
+        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("kiss") && !r.getParsedWord().getSuffixes().isEmpty()), "Should detect base + suffix");
     }
 
     // prefix and suffix test
@@ -69,7 +69,7 @@ class WordCalculatorTest {
 
         List<WordResult> results = calculator.checkForWords(board);
 
-        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("run")));
+        assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("run")), "should detect base inside prefix and suffix chain");
     }
 
     // invalid base test
@@ -77,7 +77,7 @@ class WordCalculatorTest {
     void testInvalidWordRejected() {
         placeHorizontalWord("qzxq", 6, 0);
         List<WordResult> results = calculator.checkForWords(board);
-        assertTrue(results.isEmpty());
+        assertTrue(results.isEmpty(), "invalid word, no results expected");
     }
 
     //vertical scan test
@@ -87,22 +87,24 @@ class WordCalculatorTest {
 
     List<WordResult> results = calculator.checkForWords(board);
 
-    assertTrue(results.stream()
-        .anyMatch(r -> r.getParsedWord().getBase().equals("run")));
+    assertTrue(results.stream().anyMatch(r -> r.getParsedWord().getBase().equals("run") && !r.isHorizontal()), "vert word should be detected");
     }
 
     //affix bonus test
     @Test
     void testAffixScoreBonus() {
-        placeHorizontalWord("overrunly", 7, 0);
+    placeHorizontalWord("overrunly", 7, 0);
 
-        List<WordResult> results = calculator.checkForWords(board);
+    List<WordResult> results = calculator.checkForWords(board);
 
-        WordResult result = results.stream().filter(r -> r.getParsedWord().getBase().equals("run")).findFirst().orElse(null);
+    WordResult result = results.stream().filter(r -> r.getParsedWord().getBase().equals("run")).findFirst().orElse(null);
 
-        assertNotNull(result);
+    assertNotNull(result, "Word should be detected");
 
-        // base + prefix + suffix: should be higher than base-only
-        assertTrue(result.getScore() > 1);
+    // Must have at least 2 affixes (prefix + suffix)
+    assertEquals(2, result.getParsedWord().getAffixCount(), "Expected exactly 2 affixes (prefix + suffix)");
+
+    // Score must reflect affix-based scoring system
+    assertTrue(result.getScore() >= 2, "Score should match affix-based scoring rules");
     }
 }

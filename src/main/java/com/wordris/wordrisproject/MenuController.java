@@ -35,7 +35,7 @@ public class MenuController {
         }
     }
 
-    @FXML
+    @FXML //when  the info button is pressed it generates this window below
     protected void onInfo() {
         Stage popup = new Stage();
         popup.initModality(Modality.APPLICATION_MODAL);
@@ -66,7 +66,7 @@ public class MenuController {
         rulesLabel.getStyleClass().add("popup-label");
         Label rulesText = new Label(
             "1. Use arrow keys to move blocks.\n" +
-            "2. Press ↓ to drop a block.\n" +
+            "2. Press SPACE to drop a block.\n" +
             "3. Form valid words horizontally.\n" +
             "4. Longer words = more points.\n" +
             "5. Press C to swap with reserve."
@@ -95,7 +95,7 @@ public class MenuController {
         popup.showAndWait();
     }
 
-    @FXML
+    @FXML //closes the application on press
     protected void onQuit() {
         Stage stage = (Stage) quitButton.getScene().getWindow();
         stage.close();

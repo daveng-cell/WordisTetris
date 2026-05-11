@@ -19,7 +19,7 @@ public class GameManager {
         this.currentBoard = new Board();
         this.wordCalculator = new WordCalculator();
     }
-
+    
     public boolean startGame() {
         if (isRunning) return false;
         try {
@@ -52,13 +52,14 @@ public class GameManager {
             lastGravityTime = now;
             boolean moved = currentBoard.stepDown();
             if (!moved) {
-                currentBoard.placeCurrentPolyomino();
+                //checks to see fi the moved piece hits the "floor"
+                currentBoard.placeCurrentPolyomino(); 
                 onPiecePlaced();
             }
             updateGravitySpeed();
         }
     }
-
+    //increases speed when score increases 
     private void updateGravitySpeed() {
         // every 5 points speed up by 50ms, minimum 150ms
         long minInterval = 150_000_000L;
@@ -68,12 +69,12 @@ public class GameManager {
 
     public void onPiecePlaced() {
         if (!isRunning || isPaused) return;
-
+        //checks with board to see if its full
         if (currentBoard.isGameOver()) {
             endGame();
             return;
         }
-
+        
         List<WordResult> foundWords = wordCalculator.checkForWords(currentBoard);
         for (WordResult result : foundWords) {
             updateScore(result.getScore());
@@ -85,13 +86,13 @@ public class GameManager {
             }
         }
     }
-
+    //pauses game if not paused
     public boolean pauseGame() {
         if (!isRunning || isPaused) return false;
         isPaused = true;
         return true;
     }
-
+    //unpauses game if pausesd
     public boolean resumeGame() {
         if (!isRunning || !isPaused) return false;
         isPaused = false;
@@ -104,13 +105,13 @@ public class GameManager {
         isPaused = false;
         return true;
     }
-
+    //updates score
     public void updateScore(int points) {
         if (isRunning && !isPaused) {
             currentRoundScore += points;
         }
     }
-
+    //getters
     public int getCurrentRoundScore() { return currentRoundScore; }
     public Board getCurrentBoard() { return currentBoard; }
     public boolean isRunning() { return isRunning; }

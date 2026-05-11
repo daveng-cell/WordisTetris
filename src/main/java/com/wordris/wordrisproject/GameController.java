@@ -26,7 +26,7 @@ public class GameController {
     private GameManager gameManager;
     private AnimationTimer gameLoop;
     private Stage stage;
-
+    //sets up the baord and such
     public void initGame(Stage stage) {
         this.stage = stage;
         gameManager = new GameManager();
@@ -35,7 +35,7 @@ public class GameController {
         Pane visualBoard = gameManager.getCurrentBoard().getVisualBoard();
         visualBoard.setPrefSize(300, 600);
         boardPane.getChildren().add(visualBoard);
-
+        //disables the ability for players to switch focus off of board
         pauseButton.setFocusTraversable(false);
         exitButton.setFocusTraversable(false);
         swapButton.setFocusTraversable(false);
@@ -66,7 +66,7 @@ public class GameController {
                         prevScore = newScore;
                         updateNextPreview();
                         updateReservePreview();
-                    }
+                    } //if the game ends then load game over
                 } else if (!gameManager.isRunning()) {
                     gameLoop.stop();
                     navigateToGameOver();
@@ -75,7 +75,7 @@ public class GameController {
         };
         gameLoop.start();
     }
-
+    //loads game over screen 
     private void navigateToGameOver() {
         try {
             FXMLLoader loader = new FXMLLoader(
@@ -96,7 +96,7 @@ public class GameController {
         boardPane.setOnKeyPressed(event -> {
             if (!gameManager.isRunning() || gameManager.isPaused()) return;
             Board board = gameManager.getCurrentBoard();
-            switch (event.getCode()) {
+            switch (event.getCode()) { //input handlers
                 case LEFT -> board.moveCurrentPolyomino(-1);
                 case RIGHT -> board.moveCurrentPolyomino(1);
                 case DOWN -> {
@@ -128,7 +128,7 @@ public class GameController {
             event.consume();
         });
     }
-
+    //when placed, peeks the stack and displays the upcoming piece
     private void updateNextPreview() {
         nextPane1.getChildren().clear();
         Polyomino next = gameManager.getCurrentBoard().peekNext();
@@ -155,7 +155,7 @@ public class GameController {
             nextPane1.getChildren().addAll(rect, text);
         }
     }
-
+    //builds the resereved peice to display it 
     private void updateReservePreview() {
         reservedPane.getChildren().clear();
         Polyomino reserved = gameManager.getCurrentBoard().getReserved();
@@ -183,7 +183,7 @@ public class GameController {
         }
     }
 
-    @FXML
+    @FXML //pauses game and gives visibile feedback
     protected void onPause() {
         if (gameManager.isPaused()) {
             gameManager.resumeGame();
@@ -196,7 +196,7 @@ public class GameController {
         }
     }
 
-    @FXML
+    @FXML //moves the piece in play to the reserve in data and moves reserve to play
     protected void onSwapReserve() {
         if (gameManager.isRunning() && !gameManager.isPaused()) {
             gameManager.getCurrentBoard().switchReservedPolyomino();
@@ -207,7 +207,7 @@ public class GameController {
         }
     }
 
-    @FXML
+    @FXML //makes us go back to the main menu
     protected void onExit() {
         shutdown();
         try {
@@ -221,7 +221,7 @@ public class GameController {
             e.printStackTrace();
         }
     }
-
+    //ends the game. 
     public void shutdown() {
         if (gameLoop != null) gameLoop.stop();
         gameManager.endGame();

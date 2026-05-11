@@ -1,5 +1,6 @@
-package com.wordris.wordrisproject;
-
+import com.wordris.wordrisproject.Board;
+import com.wordris.wordrisproject.WordCalculator;
+import com.wordris.wordrisproject.WordResult;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -18,7 +19,7 @@ class WordCalculatorTest {
         board = new Board();
     }
 
-    // manuanky place word for test
+    // manually place word for test
     private void placeHorizontalWord(String word, int row, int colStart) {
         char[][] grid = board.getLetterBoardCopy();
 

@@ -24,7 +24,6 @@ public class Board {
     private Polyomino reserved;
     private Queue<Polyomino> polyominoQueue;
     private PolyominoGenerator polyominoGenerator;
-    private WordCalculator wordCalculator;
 
     public Board() {
         // Creates generator, then creates a queue of a particular size, which right now is just a sample number and should change

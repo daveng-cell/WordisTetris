@@ -53,7 +53,7 @@ public class WordValidator {
         }
 
         // Multiple prefixes
-        String chain =String.join(",", prefixes);
+        String chain = String.join(",", prefixes).replaceAll("\\s+", "");
 
         return bank.getPrefixChains().contains(chain);
     }
@@ -69,7 +69,7 @@ public class WordValidator {
         }
 
         // Multiple suffixes
-        String chain = String.join(",", suffixes);
+        String chain = String.join(",", suffixes).replaceAll("\\s+", "");
         return bank.getSuffixChains().contains(chain);
     }
 }

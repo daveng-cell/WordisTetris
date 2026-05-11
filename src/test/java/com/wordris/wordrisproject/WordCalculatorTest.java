@@ -1,3 +1,5 @@
+
+package com.wordris.wordrisproject;
 import com.wordris.wordrisproject.Board;
 import com.wordris.wordrisproject.WordCalculator;
 import com.wordris.wordrisproject.WordResult;

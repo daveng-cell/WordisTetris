@@ -53,12 +53,20 @@ public class GameController {
 
     private void setupGameLoop() {
         gameLoop = new AnimationTimer() {
+            private int prevScore = 0;
+
             @Override
             public void handle(long now) {
                 if (gameManager.isRunning() && !gameManager.isPaused()) {
-                    gameManager.updatePerFrame();
+                    gameManager.updatePerFrame(now);
                     scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
-                    statusLabel.setText("");
+
+                    int newScore = gameManager.getCurrentRoundScore();
+                    if (newScore != prevScore) {
+                        prevScore = newScore;
+                        updateNextPreview();
+                        updateReservePreview();
+                    }
                 } else if (!gameManager.isRunning()) {
                     gameLoop.stop();
                     navigateToGameOver();
@@ -88,13 +96,15 @@ public class GameController {
         boardPane.setOnKeyPressed(event -> {
             if (!gameManager.isRunning() || gameManager.isPaused()) return;
             Board board = gameManager.getCurrentBoard();
-            System.out.println("Key pressed: " + event.getCode());
             switch (event.getCode()) {
                 case LEFT -> board.moveCurrentPolyomino(-1);
                 case RIGHT -> board.moveCurrentPolyomino(1);
                 case DOWN -> {
-                    board.placeCurrentPolyomino();
-                    gameManager.onPiecePlaced();
+                    boolean moved = board.stepDown();
+                    if (!moved) {
+                        board.placeCurrentPolyomino();
+                        gameManager.onPiecePlaced();
+                    }
                     scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
                     updateNextPreview();
                     updateReservePreview();
@@ -105,6 +115,13 @@ public class GameController {
                     updateNextPreview();
                 }
                 case P -> onPause();
+                case SPACE -> {
+                    board.placeCurrentPolyomino();
+                    gameManager.onPiecePlaced();
+                    scoreLabel.setText(String.valueOf(gameManager.getCurrentRoundScore()));
+                    updateNextPreview();
+                    updateReservePreview();
+                }
                 default -> {}
             }
             boardPane.requestFocus();
@@ -125,16 +142,11 @@ public class GameController {
         double startY = (paneHeight - blockSize) / 2;
 
         for (int i = 0; i < letters.length; i++) {
-            Rectangle rect = new Rectangle(
-                startX + i * blockSize, startY,
-                blockSize - 2, blockSize - 2
-            );
+            Rectangle rect = new Rectangle(startX + i * blockSize, startY, blockSize - 2, blockSize - 2);
             rect.setFill(javafx.scene.paint.Color.WHITE);
             rect.setStroke(javafx.scene.paint.Color.YELLOW);
 
-            javafx.scene.text.Text text = new javafx.scene.text.Text(
-                String.valueOf(letters[i]).toUpperCase()
-            );
+            javafx.scene.text.Text text = new javafx.scene.text.Text(String.valueOf(letters[i]).toUpperCase());
             text.setFill(javafx.scene.paint.Color.BLACK);
             text.setFont(Font.font("Courier New", FontWeight.BOLD, blockSize * 0.5));
             text.setX(startX + i * blockSize + blockSize * 0.25);
@@ -157,16 +169,11 @@ public class GameController {
         double startY = (paneHeight - blockSize) / 2;
 
         for (int i = 0; i < letters.length; i++) {
-            Rectangle rect = new Rectangle(
-                startX + i * blockSize, startY,
-                blockSize - 2, blockSize - 2
-            );
+            Rectangle rect = new Rectangle(startX + i * blockSize, startY, blockSize - 2, blockSize - 2);
             rect.setFill(javafx.scene.paint.Color.WHITE);
             rect.setStroke(javafx.scene.paint.Color.YELLOW);
 
-            javafx.scene.text.Text text = new javafx.scene.text.Text(
-                String.valueOf(letters[i]).toUpperCase()
-            );
+            javafx.scene.text.Text text = new javafx.scene.text.Text(String.valueOf(letters[i]).toUpperCase());
             text.setFill(javafx.scene.paint.Color.BLACK);
             text.setFont(Font.font("Courier New", FontWeight.BOLD, blockSize * 0.5));
             text.setX(startX + i * blockSize + blockSize * 0.25);

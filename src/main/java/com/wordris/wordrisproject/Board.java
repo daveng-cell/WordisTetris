@@ -248,6 +248,19 @@ public void moveCurrentPolyomino(int direction) {
         }
         return false;
     }
+    public boolean stepDown() {
+        for (Rectangle block : current.getShapes()) {
+            int col = (int) block.getX() / BASE_GRID;
+            int row = (int) block.getY() / BASE_GRID;
 
+            if (row + 1 >= Y_MAX / BASE_GRID) return false;
+            if (letterBoard[row + 1][col] != '\0') return false;
+        }
+
+        for (Rectangle block : current.getShapes()) {
+            block.setY(block.getY() + BASE_GRID);
+        }
+        return true;
+    }
 
 }

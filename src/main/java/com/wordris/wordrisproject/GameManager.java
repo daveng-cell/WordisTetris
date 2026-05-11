@@ -9,6 +9,9 @@ public class GameManager {
     private boolean isPaused;
     private WordCalculator wordCalculator;
 
+    private long lastGravityTime = 0;
+    private long gravityInterval = 1000_000_000L; // 1 second in nanoseconds
+
     public GameManager() {
         this.currentRoundScore = 0;
         this.isRunning = false;
@@ -18,26 +21,49 @@ public class GameManager {
     }
 
     public boolean startGame() {
-        System.out.println("startGame called, isRunning: " + isRunning);
         if (isRunning) return false;
         try {
             currentRoundScore = 0;
+            lastGravityTime = 0;
+            gravityInterval = 1000_000_000L;
             isRunning = true;
             isPaused = false;
-            System.out.println("About to call getNextPolyomino");
             currentBoard.getNextPolyomino();
-            System.out.println("Game started, board children: " + currentBoard.getVisualBoard().getChildren().size());
             return true;
         } catch (Exception e) {
             e.printStackTrace();
             return false;
         }
     }
-    public void updatePerFrame() {
+
+    public void updatePerFrame(long now) {
         if (!isRunning || isPaused) return;
+
         if (currentBoard.isGameOver()) {
             endGame();
+            return;
         }
+
+        if (lastGravityTime == 0) {
+            lastGravityTime = now;
+        }
+
+        if (now - lastGravityTime >= gravityInterval) {
+            lastGravityTime = now;
+            boolean moved = currentBoard.stepDown();
+            if (!moved) {
+                currentBoard.placeCurrentPolyomino();
+                onPiecePlaced();
+            }
+            updateGravitySpeed();
+        }
+    }
+
+    private void updateGravitySpeed() {
+        // every 5 points speed up by 50ms, minimum 150ms
+        long minInterval = 150_000_000L;
+        long speedup = (currentRoundScore / 5) * 50_000_000L;
+        gravityInterval = Math.max(minInterval, 1000_000_000L - speedup);
     }
 
     public void onPiecePlaced() {
@@ -85,19 +111,8 @@ public class GameManager {
         }
     }
 
-    public int getCurrentRoundScore() {
-        return currentRoundScore;
-    }
-
-    public Board getCurrentBoard() {
-        return currentBoard;
-    }
-
-    public boolean isRunning() {
-        return isRunning;
-    }
-
-    public boolean isPaused() {
-        return isPaused;
-    }
+    public int getCurrentRoundScore() { return currentRoundScore; }
+    public Board getCurrentBoard() { return currentBoard; }
+    public boolean isRunning() { return isRunning; }
+    public boolean isPaused() { return isPaused; }
 }

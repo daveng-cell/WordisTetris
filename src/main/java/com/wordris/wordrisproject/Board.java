@@ -230,6 +230,14 @@ public void moveCurrentPolyomino(int direction) {
         return copy;
     }
 
+    //FOR TEST
+    public void setLetter(int row, int col, char value) {
+        if (row < 0 || row >= letterBoard.length) return;
+        if (col < 0 || col >= letterBoard[0].length) return;
+
+        letterBoard[row][col] = value;
+    }
+
     public Polyomino getReserved() {
         return reserved;
     }

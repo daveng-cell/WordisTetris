@@ -174,6 +174,7 @@ public void moveCurrentPolyomino(int direction) {
             block.setY(block.getY() + minDrop * BASE_GRID);
         }
 
+        // lock into letterBoard
         char[] letters = current.getLetters();
         Rectangle[] shapes = current.getShapes();
         for (int i = 0; i < current.getSize(); i++) {
@@ -181,6 +182,10 @@ public void moveCurrentPolyomino(int direction) {
             int row = (int) shapes[i].getY() / BASE_GRID;
             letterBoard[row][col] = letters[i];
             visualGrid[row][col] = current.getCells()[i];
+
+            // change color to show piece is landed
+            shapes[i].setFill(javafx.scene.paint.Color.LIGHTGRAY);
+            shapes[i].setStroke(javafx.scene.paint.Color.DARKGRAY);
         }
 
         getNextPolyomino();
@@ -189,6 +194,9 @@ public void moveCurrentPolyomino(int direction) {
     // Gets next polyomino in queue 
     public void getNextPolyomino() {
         System.out.println("getNextPolyomino called, queue size: " + polyominoQueue.size());
+        if (polyominoQueue.size() <= 5) {
+            polyominoQueue.addAll(polyominoGenerator.generatePolyominos(20));
+        }
         if (!polyominoQueue.isEmpty()) {
             current = polyominoQueue.poll();
             System.out.println("Loaded piece: " + new String(current.getLetters()));
@@ -234,6 +242,7 @@ public void moveCurrentPolyomino(int direction) {
             int col = (int) block.getX() / BASE_GRID;
             int row = (int) block.getY() / BASE_GRID;
             if (letterBoard[row][col] != '\0') {
+                System.out.println("Game Over");
                 return true;
             }
         }

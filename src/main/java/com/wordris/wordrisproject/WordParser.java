@@ -29,11 +29,11 @@ public class WordParser {
         sortedSuffixes.sort((a, b) -> b.length() - a.length());
     }
 
-    public parseWord(String word){
+    public ParsedWord parseWord(String word){
         ParsedWord result = parseRecursive(word, new ArrayList<>(), new ArrayList<>());
         //if parsing fails
         if(result == null){
-            return new ParsedWord(new ArrayList<>(), word, new ArratList<>());
+            return new ParsedWord(new ArrayList<>(), word, new ArrayList<>());
         }
         return result;
     }

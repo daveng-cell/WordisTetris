@@ -43,33 +43,30 @@ public class WordValidator {
     }
 
     private boolean validPrefixChain(List<String> prefixes) {
-        if (prefixes.isEmpty()) {
-            return true;
-        }
 
-        // Single prefix
-        if (prefixes.size() == 1) {
-            return bank.getPrefixes().contains(prefixes.get(0));
-        }
+    if (prefixes.isEmpty()) return true;
 
-        // Multiple prefixes
-        String chain = String.join(",", prefixes).replaceAll("\\s+", "");
-
-        return bank.getPrefixChains().contains(chain);
+    // single prefix → must exist in prefix bank
+    if (prefixes.size() == 1) {
+        return bank.getPrefixes().contains(prefixes.get(0));
     }
 
+    // multi-prefix → must match chain bank exactly
+    String chain = String.join(",", prefixes).replaceAll("\\s+", "");
+    return bank.getPrefixChains().contains(chain);
+    }    
+
     private boolean validSuffixChain(List<String> suffixes) {
-        if (suffixes.isEmpty()) {
-            return true;
-        }
 
-        // Single suffix
-        if (suffixes.size() == 1) {
-          return bank.getSuffixes().contains(suffixes.get(0));
-        }
+    if (suffixes.isEmpty()) return true;
 
-        // Multiple suffixes
-        String chain = String.join(",", suffixes).replaceAll("\\s+", "");
-        return bank.getSuffixChains().contains(chain);
+    // single suffix → must exist in suffix bank
+    if (suffixes.size() == 1) {
+        return bank.getSuffixes().contains(suffixes.get(0));
+    }
+
+    // multi-suffix → must match chain bank exactly
+    String chain = String.join(",", suffixes).replaceAll("\\s+", "");
+    return bank.getSuffixChains().contains(chain);
     }
 }

@@ -1,14 +1,13 @@
 
 package com.wordris.wordrisproject;
-import com.wordris.wordrisproject.Board;
-import com.wordris.wordrisproject.WordCalculator;
-import com.wordris.wordrisproject.WordResult;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
+
+import com.wordris.wordrisprject.*;
 
 import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 class WordCalculatorTest {
 

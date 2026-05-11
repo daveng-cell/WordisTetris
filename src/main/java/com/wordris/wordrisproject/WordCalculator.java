@@ -13,13 +13,13 @@ public class WordCalculator {
 
     public WordCalculator() {
         // Load banks
-        var bases = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Base_Bank");
-        var prefixes = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Prefix_Bank");
-        var suffixes = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Suffix_Bank");
+        var bases = BankLoader.loadStringSet("/com/wordris/wordrisproject/Base_Bank");
+        var prefixes = BankLoader.loadStringSet("/com/wordris/wordrisproject/Prefix_Bank");
+        var suffixes = BankLoader.loadStringSet("/com/wordris/wordrisproject/Suffix_Bank");
 
         var prefixChains = new HashSet<String>();
         var suffixChains = new HashSet<String>();
-        ChainBankLoader.loadChains("src/main/java/com/wordris/wordrisproject/Chain_Bank", prefixChains, suffixChains);
+        ChainBankLoader.loadChains("/com/wordris/wordrisproject/Chain_Bank", prefixChains, suffixChains);
 
         // Bank object
         AffixBank bank = new AffixBank( bases, prefixes, suffixes, prefixChains, suffixChains);

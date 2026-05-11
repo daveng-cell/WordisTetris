@@ -5,7 +5,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
-import com.wordris.wordrisprject.*;
+import com.wordris.wordrisproject.*;
 
 import java.util.List;
 
@@ -94,7 +94,7 @@ class WordCalculatorTest {
     //affix bonus test
     @Test
     void testAffixScoreBonus() {
-        placeHorizontalWord("overunly", 7, 0);
+        placeHorizontalWord("overrunly", 7, 0);
 
         List<WordResult> results = calculator.checkForWords(board);
 

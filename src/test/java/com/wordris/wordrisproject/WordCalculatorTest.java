@@ -16,9 +16,10 @@ class WordCalculatorTest {
 
     @BeforeEach
     void setUp() {
-        calculator = new WordCalculator();
-        board = new Board();
-    }
+    calculator = new WordCalculator();
+    board = new Board();
+    board.resetBoard();
+}
 
     // manually place word for test
     private void placeHorizontalWord(String word, int row, int colStart) {

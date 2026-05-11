@@ -1,10 +1,10 @@
 package com.wordris.wordrisproject;
 
-import java.util.Queue;
-
 import javafx.scene.Group;
 import javafx.scene.layout.Pane;
 import javafx.scene.shape.Rectangle;
+
+import java.util.Queue;
 
 public class Board {
     // Global variables: BASE_GRID represents the size of a 1x1 space in a grid
@@ -229,12 +229,15 @@ public void moveCurrentPolyomino(int direction) {
         }
         return copy;
     }
+
     public Polyomino getReserved() {
         return reserved;
     }
+
     public Polyomino peekNext() {
         return polyominoQueue.peek();
     }
+
     public boolean isGameOver() {
         if (current == null) return false;
         for (Rectangle block : current.getShapes()) {
@@ -247,6 +250,7 @@ public void moveCurrentPolyomino(int direction) {
         }
         return false;
     }
+
     public boolean stepDown() {
         for (Rectangle block : current.getShapes()) {
             int col = (int) block.getX() / BASE_GRID;

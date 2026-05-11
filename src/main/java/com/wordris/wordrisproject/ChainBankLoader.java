@@ -5,7 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Set;
 
-//parsing chanbank.txt
+// Helps with parsing Chain_Bank.txt
 public class ChainBankLoader {
   
     public static void loadChains(

@@ -1,7 +1,6 @@
 package com.wordris.wordrisproject;
 
 import java.util.List;
-import java.util.Set;
 
 // Responsible ONLY for validating parsed words.
 public class WordValidator {
@@ -23,7 +22,6 @@ public class WordValidator {
      * 4. Suffix chains valid
      */
     public boolean isValid(ParsedWord word) {
-
         // Base must exist
         if (!bank.getBases().contains(word.getBase())) {
 
@@ -44,9 +42,7 @@ public class WordValidator {
         return validSuffixChain(word.getSuffixes());
     }
 
-    private boolean validPrefixChain(
-            List<String> prefixes) {
-
+    private boolean validPrefixChain(List<String> prefixes) {
         if (prefixes.isEmpty()) {
             return true;
         }
@@ -62,9 +58,7 @@ public class WordValidator {
         return bank.getPrefixChains().contains(chain);
     }
 
-    private boolean validSuffixChain(
-            List<String> suffixes) {
-
+    private boolean validSuffixChain(List<String> suffixes) {
         if (suffixes.isEmpty()) {
             return true;
         }

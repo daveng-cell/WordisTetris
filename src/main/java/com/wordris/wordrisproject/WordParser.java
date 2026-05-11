@@ -4,10 +4,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-//Responsible ONLY for parsing words
-//longest-match parsing
+// Responsible ONLY for parsing words
+// Longest-match parsing
 public class WordParser {
-
     // Banks used during parsing
     private final Set<String> prefixBank;
     private final Set<String> suffixBank;
@@ -19,14 +18,13 @@ public class WordParser {
         this.baseBank = bank.getBases();
     }
 
-    // Parses a word into:prefixes + base + suffixes
+    // Parses a word into: prefixes + base + suffixes
     public ParsedWord parseWord(String word) {
-
         List<String> prefixes = new ArrayList<>();
         List<String> suffixes = new ArrayList<>();
         String working = word;
 
-        //prefix parsing
+        // Prefix parsing
         boolean found = true;
 
         while (found) {
@@ -50,10 +48,10 @@ public class WordParser {
             }
         }
 
-        //suffix parsing
+        // Suffix parsing
         found = true;
         while (found) {
-            // !!!!stop stripping once remaining word is valid base
+            // Stop stripping once remaining word is valid base
             if (baseBank.contains(working)) {
                 break;
             }

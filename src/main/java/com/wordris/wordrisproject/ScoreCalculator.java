@@ -1,6 +1,6 @@
 package com.wordris.wordrisproject;
 
-//score calculation
+// Score calculation
 public class ScoreCalculator {
     // Every affix gives 1 point
     private static final int AFFIX_POINTS = 1;
@@ -9,7 +9,7 @@ public class ScoreCalculator {
     private static final int FOUR_AFFIX_BONUS = 6;
     private static final int FIVE_PLUS_AFFIX_BONUS = 10;
 
-    //Calculates score based on num of affixes
+    // Calculates score based on num of affixes
     public int calculateScore(
             ParsedWord word) {
 

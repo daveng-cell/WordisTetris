@@ -1,29 +1,12 @@
 package com.wordris.wordrisproject;
 
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Objects;
-import java.util.Random;
-import java.util.Set;
-
-import static com.wordris.wordrisproject.Board.BASE_GRID;
-
 import javafx.scene.shape.Rectangle;
+import java.util.*;
+import static com.wordris.wordrisproject.Board.BASE_GRID;
 
 enum PolyominoState {
     PREFIX, SUFFIX, BASE
 }
-
-// Unsure of whether to do different shapes yet, will do straight lines first
-//enum formation {
-//    L,
-//    J,
-//    O,
-//    I,
-//    T,
-//    Z,
-//    S
-//}
 
 public class PolyominoGenerator {
     private PolyominoState state;
@@ -36,7 +19,6 @@ public class PolyominoGenerator {
         createStringBank();
     }
 
-    // May need improvements
     public ArrayDeque<Polyomino> generatePolyominos(int numOfPolyominoes) {
         ArrayDeque<Polyomino> currQueue = new ArrayDeque<>();
 
@@ -60,7 +42,7 @@ public class PolyominoGenerator {
     }
 
     // Requires file with all prefixes, suffixes and bases to implement
-    // Takes that file and implants them into the Strin banks
+    // Takes that file and implants them into the String banks
     private void createStringBank() {
         Set<String> tempSet;
         tempSet = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Prefix_Bank");
@@ -71,9 +53,9 @@ public class PolyominoGenerator {
 
         tempSet = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Base_Bank");
         Objects.requireNonNull(baseBank).addAll(tempSet);
-
     }
 
+    // Gets a random String from the prefix/suffix/base banks to make a new Polyomino
     private String getRandomString() {
         Random r = new Random();
         int bound;
@@ -105,11 +87,11 @@ public class PolyominoGenerator {
             polyParts[i] = new Rectangle(blockSize, blockSize);
         }
 
-        // Each formation means setting x and y coordination will be different: b, c, and d are placed with reference to 'a' as the base
         positionBlocks(polyParts);
         return new Polyomino(chosenString, polyParts, chosenString.length());
     }
 
+    // Positions of Polyominoes are all in a horizontal straight line formation
     private void positionBlocks(Rectangle[] blocks) {
     for (int i = 0; i < blocks.length; i++) {
         blocks[i].setX(BASE_GRID * i);

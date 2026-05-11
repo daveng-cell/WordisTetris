@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 
-//Scans board, coordinats parser/validator/scorer
+// Scans board, coordinates parser/validator/scorer
 public class WordCalculator {
 
     private final WordParser parser;
@@ -12,50 +12,36 @@ public class WordCalculator {
     private final ScoreCalculator scorer;
 
     public WordCalculator() {
-
-        // load banks
+        // Load banks
         var bases = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Base_Bank");
-
         var prefixes = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Prefix_Bank");
-
         var suffixes = BankLoader.loadStringSet("src/main/java/com/wordris/wordrisproject/Suffix_Bank");
 
         var prefixChains = new HashSet<String>();
-
         var suffixChains = new HashSet<String>();
-
         ChainBankLoader.loadChains("src/main/java/com/wordris/wordrisproject/Chain_Bank", prefixChains, suffixChains);
 
-        // bank bject
-
+        // Bank object
         AffixBank bank = new AffixBank( bases, prefixes, suffixes, prefixChains, suffixChains);
 
-        //helpers
-
+        // Helpers which WordCalculator delegates tasks to
         parser = new WordParser(bank);
-
         validator = new WordValidator(bank);
-
         scorer = new ScoreCalculator();
     }
 
-    //scans board
+    // Scans board
     public List<WordResult> checkForWords(Board board) {
-
         List<WordResult> results = new ArrayList<>();
-
         char[][] grid = board.getLetterBoardCopy();
 
         scanHorizontal(grid, results);
-
         scanVertical(grid, results);
-
         return results;
     }
 
-    // horizonatl scan
+    // Horizontal scan
     private void scanHorizontal(char[][] grid, List<WordResult> results) {
-
         for (int row = 0; row < grid.length; row++) {
             StringBuilder sb = new StringBuilder();
             int startCol = -1;
@@ -74,9 +60,8 @@ public class WordCalculator {
         }
     }
 
-    // vert scan
+    // Vertical scan
     private void scanVertical(char[][] grid,List<WordResult> results) {
-
         for (int col = 0; col < grid[0].length; col++) {
             StringBuilder sb = new StringBuilder();
 
@@ -97,8 +82,8 @@ public class WordCalculator {
         }
     }
 
-    //word eval
-    private void evaluateSequence(StringBuilder sb,int fixedIndex,int start,int end, boolean horizontal,List<WordResult> results) {
+    // Word evaluation
+    private void evaluateSequence(StringBuilder sb, int fixedIndex, int start, int end, boolean horizontal, List<WordResult> results) {
         if (sb.isEmpty()) {
             return;
         }

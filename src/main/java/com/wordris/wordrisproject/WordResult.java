@@ -1,6 +1,6 @@
 package com.wordris.wordrisproject;
 
-//valid detected word
+// Valid detected word
 public class WordResult {
     private final ParsedWord parsedWord;
     private final int score;
